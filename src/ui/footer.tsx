@@ -26,24 +26,30 @@ export default function Footer() {
       try {
         const response = await contentfulClient.getEntries({
           content_type: "blogKebunTaniku",
-          order: "-fields.date" as const, // Pastikan menggunakan 'as const' untuk memastikan tipe yang tepat
-        });
+          order: ["-fields.date"],
+        });        
 
         const posts = response.items.map((item) => {
           const blogItem = item as Entry<any>;
-
-          const dateField = blogItem.fields.date;
+        
+          const rawTitle = blogItem.fields.title;
+          const rawSlug = blogItem.fields.slug;
+          const rawDate = blogItem.fields.date;
+        
+          const title = typeof rawTitle === "string" ? rawTitle : String(rawTitle ?? "");
+          const slug = typeof rawSlug === "string" ? rawSlug : String(rawSlug ?? "");
           const date =
-            typeof dateField === "string" || typeof dateField === "number"
-              ? new Date(dateField)
+            typeof rawDate === "string" || typeof rawDate === "number"
+              ? new Date(rawDate)
               : new Date();
-
+        
           return {
-            title: blogItem.fields.title,
-            date: date.toLocaleDateString(),
-            slug: blogItem.fields.slug,
+            title,
+            date: date.toISOString(),
+            slug,
           };
         });
+        
 
         setArticles(posts.slice(0, 2)); // Ambil hanya 2 artikel terbaru
       } catch (error) {

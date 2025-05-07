@@ -38,8 +38,8 @@ const BlogSectionHome = () => {
 
           // Pengecekan tipe untuk banner, pastikan itu adalah Asset
           const image = isAsset(blogItem.fields.banner)
-            ? blogItem.fields.banner.fields?.file?.url || "/default-image.jpg"
-            : "/default-image.jpg";
+          ? `https:${blogItem.fields.banner.fields?.file?.url}` || "/default-image.jpg"
+          : "/default-image.jpg";        
 
           // Pastikan title adalah string
           const title = typeof blogItem.fields.title === "string" ? blogItem.fields.title : "Untitled";
@@ -52,11 +52,11 @@ const BlogSectionHome = () => {
             author: author,
             date: date.toLocaleDateString(),
             image: image,
-            slug: blogItem.fields.slug,
+            slug: String(blogItem.fields.slug ?? ""),
             day: date.getDate().toString(),
             monthYear: date.toLocaleString('default', { month: 'short', year: 'numeric' }),
-            category: blogItem.fields.categories || "Uncategorized",
-          };
+            category: String(blogItem.fields.categories ?? "Uncategorized"),
+          };          
         });
 
         // Ambil hanya 5 artikel terbaru
