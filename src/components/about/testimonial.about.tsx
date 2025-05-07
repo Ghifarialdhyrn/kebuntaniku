@@ -63,7 +63,7 @@ const TestimonialAbout = () => {
               height={96}
               className="w-24 h-24 rounded-full object-cover mb-6"
             />
-            <p className="text-gray-600 mb-6 italic">"{testimonial.text}"</p>
+            <p className="text-gray-600 mb-6 italic">&quot;{testimonial.text}&quot;</p>
             <h4 className="text-lg font-bold text-gray-900">{testimonial.name}</h4>
             <span className="text-sm text-green-600 mt-1">{testimonial.role}</span>
           </div>

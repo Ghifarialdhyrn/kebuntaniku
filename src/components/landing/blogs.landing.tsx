@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { TypeBlogKebunTaniku } from "@/contentful/types/blogKebunTaniku.type"; 
-import { Entry, Asset } from "contentful"; // Impor Asset untuk menangani tipe banner
+import contentfulClient from "@/contentful/contentfulClient";
+import { TypeBlogKebunTanikuSkeleton } from "@/contentful/types/blogKebunTaniku.type";
+import { Asset } from "contentful"; // Impor Asset untuk menangani tipe banner
 import Image from "next/image";
-import contentfulClient from "@/contentful/contentfulClient"; 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface BlogPost {
   title: string;
@@ -24,41 +24,31 @@ const BlogSectionHome = () => {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const response = await contentfulClient.getEntries({
+        const response = await contentfulClient.getEntries<TypeBlogKebunTanikuSkeleton>({
           content_type: "blogKebunTaniku",
-        });
+        });        
 
         const posts = response.items.map((item) => {
-          const blogItem = item as Entry<any>;
-
-          const dateField = blogItem.fields.date;
-
-          const date = typeof dateField === "string" || typeof dateField === "number"
-            ? new Date(dateField)
+          const fields = item.fields;
+          const date = typeof fields.date === "string" || typeof fields.date === "number"
+            ? new Date(fields.date)
             : new Date();
-
-          // Pengecekan tipe untuk banner, pastikan itu adalah Asset
-          const image = isAsset(blogItem.fields.banner)
-          ? `https:${blogItem.fields.banner.fields?.file?.url}` || "/default-image.jpg"
-          : "/default-image.jpg";        
-
-          // Pastikan title adalah string
-          const title = typeof blogItem.fields.title === "string" ? blogItem.fields.title : "Untitled";
-
-          // Pastikan author adalah string
-          const author = typeof blogItem.fields.author === "string" ? blogItem.fields.author : "Unknown";
-
+        
+          const image = isAsset(fields.banner)
+            ? `https:${fields.banner.fields?.file?.url}` || "/default-image.jpg"
+            : "/default-image.jpg";
+        
           return {
-            title: title,
-            author: author,
-            date: date.toLocaleDateString(),
-            image: image,
-            slug: String(blogItem.fields.slug ?? ""),
+            title: typeof fields.title === "string" ? fields.title : "Untitled",
+            author: typeof fields.author === "string" ? fields.author : "Unknown",
+            date: date.toISOString(),
+            image,
+            slug: String(fields.slug ?? ""),
             day: date.getDate().toString(),
-            monthYear: date.toLocaleString('default', { month: 'short', year: 'numeric' }),
-            category: String(blogItem.fields.categories ?? "Uncategorized"),
-          };          
-        });
+            monthYear: date.toLocaleString("default", { month: "short", year: "numeric" }),
+            category: String(fields.categories ?? "Uncategorized"),
+          };
+        });        
 
         // Ambil hanya 5 artikel terbaru
         setBlogPosts(posts.slice(0, 5));

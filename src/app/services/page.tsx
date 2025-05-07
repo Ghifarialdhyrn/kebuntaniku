@@ -33,7 +33,7 @@ export default function Services() {
             Agriculture Market Leaders
           </h3>
           <p className="text-white font-bold mb-6 text-4xl z-10 relative">
-            We're popular in agriculture market globally
+            We are popular in agriculture market globally
           </p>
           <div className="absolute bottom-0 right-0 opacity-50 ">
             <Image

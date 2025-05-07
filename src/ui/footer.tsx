@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
 import contentfulClient from "@/contentful/contentfulClient";
-import { Entry, Asset } from "contentful";
+import { Entry } from "contentful";
 import Image from "next/image";
 
 interface BlogPost {

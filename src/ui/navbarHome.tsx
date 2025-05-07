@@ -2,20 +2,17 @@
 
 import { Link } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import {
-  FaTwitter,
   FaFacebookF,
-  FaPinterest,
   FaInstagram,
+  FaPinterest,
+  FaTwitter,
   FaWhatsapp,
 } from "react-icons/fa";
 import { IoLocationSharp } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 
 const NavbarHome: React.FC = () => {
-  const [cartItems, setCartItems] = useState<number>(0);
-
   const handleScroll = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {

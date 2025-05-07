@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "contentful";
 import { FaStar } from "react-icons/fa"; // Menggunakan ikon bintang dari react-icons
 import Image from "next/image";
+import Link from "next/link";
 
 // Membuat client Contentful
 const contentfulClient = createClient({
@@ -97,11 +98,11 @@ export default function ProductsHome() {
         })}
       </div>
 
-      <a href="/products">
+      <Link href="/products">
         <button className="mt-16 px-6 py-3 bg-[#5ECDCF] text-black text-lg font-semibold rounded-lg hover:bg-[#5ECDCF] hover:text-white hover:cursor-pointer transition">
           See More
         </button>
-      </a>
+      </Link>
     </section>
   );
 }

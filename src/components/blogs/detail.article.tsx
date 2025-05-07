@@ -13,6 +13,7 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import RichText from "../global/RichText";
+import { Document } from "@contentful/rich-text-types";
 
 interface Post {
   title: string;
@@ -20,7 +21,7 @@ interface Post {
   date: string;
   category: string;
   image: string;
-  body: any; // Update type to match RichText document
+  body: Document; 
 }
 
 export default function BlogPost() {

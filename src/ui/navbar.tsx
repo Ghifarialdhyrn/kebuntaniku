@@ -5,8 +5,6 @@ import {
   FaFacebookF,
   FaPinterest,
   FaInstagram,
-  FaShoppingCart,
-  FaSearch,
 } from "react-icons/fa";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
