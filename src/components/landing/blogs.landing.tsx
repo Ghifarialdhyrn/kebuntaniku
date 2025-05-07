@@ -5,6 +5,7 @@ import { TypeBlogKebunTaniku } from "@/contentful/types/blogKebunTaniku.type";
 import { Entry, Asset } from "contentful"; // Impor Asset untuk menangani tipe banner
 import Image from "next/image";
 import contentfulClient from "@/contentful/contentfulClient"; 
+import Link from "next/link";
 
 interface BlogPost {
   title: string;
@@ -85,7 +86,7 @@ const BlogSectionHome = () => {
             className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="relative">
-              <img
+              <Image
                 src={post.image}
                 alt={post.title}
                 width={400}
@@ -111,23 +112,23 @@ const BlogSectionHome = () => {
               <h3 className="text-xl font-semibold text-gray-900">
                 {post.title}
               </h3>
-              <a
+              <Link
                 href={`/blogs/${post.slug}`}
                 className="mt-4 inline-block text-green-600 font-semibold hover:underline transition duration-200"
               >
                 CONTINUE READING →
-              </a>
+              </Link>
             </div>
           </div>
         ))}
       </div>
 
       {/* Tombol See More */}
-      <a href="/blogs">
+      <Link href="/blogs">
         <button className="mt-16 px-6 py-3 bg-[#5ECDCF] text-black text-lg font-semibold rounded-lg hover:bg-[#5ECDCF] hover:text-white hover:cursor-pointer transition">
           See More
         </button>
-      </a>
+      </Link>
     </section>
   );
 };

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const testimonials = [
@@ -55,9 +56,11 @@ const TestimonialAbout = () => {
             key={index}
             className="bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition duration-300 flex flex-col items-center text-center"
           >
-            <img
+            <Image
               src={testimonial.image}
               alt={testimonial.name}
+              width={96}
+              height={96}
               className="w-24 h-24 rounded-full object-cover mb-6"
             />
             <p className="text-gray-600 mb-6 italic">"{testimonial.text}"</p>

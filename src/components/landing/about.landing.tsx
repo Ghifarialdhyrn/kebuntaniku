@@ -1,11 +1,15 @@
+import Image from "next/image";
+
 export default function AboutHome() {
   return (
     <section className="w-full h-[500px] flex mx-auto mb-40 rounded-lg shadow-lg overflow-hidden">
       {/* Bagian Gambar */}
       <div className="w-[50%] flex justify-center items-center">
-        <img
+        <Image
           src="/hero3.jpg" // Ganti dengan gambar yang sesuai
           alt="About Us"
+          width={500}
+          height={500}
           className="w-full h-full object-cover"
         />
       </div>

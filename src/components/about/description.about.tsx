@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -9,16 +10,20 @@ const Descriptions = () => {
         <div className="relative flex justify-center items-center h-[500px]">
           <div className="absolute top-5 left-5 bg-lime-300 w-[250px] h-[250px] rounded-xl -z-10"></div>
           <div className="rounded-xl overflow-hidden">
-            <img
+            <Image
               src="/desc1.png"
               alt="Agriculture"
+              width={400}
+              height={500}
               className="w-[400px] h-[500px] object-cover"
             />
           </div>
           <div className="absolute bottom-0 left-12 rounded-xl overflow-hidden shadow-lg">
-            <img
+            <Image
               src="/desc2.png"
               alt="Farmer"
+              width={250}
+              height={270}
               className="w-[250px] h-[270px] object-cover"
             />
           </div>

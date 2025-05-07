@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "contentful";
 import { FaStar } from "react-icons/fa"; // Menggunakan ikon bintang dari react-icons
+import Image from "next/image";
 
 // Membuat client Contentful
 const contentfulClient = createClient({
@@ -48,9 +49,11 @@ export default function ProductsHome() {
               className="bg-gray-50 p-6 rounded-lg shadow-lg text-center"
             >
               <div className="relative w-full h-48 mb-4">
-                <img
+                <Image
                   src={product.fields.image.fields.file.url} // Mengambil URL gambar dari Contentful
                   alt={product.fields.productName}
+                  width={500}
+                  height={500}
                   className="w-full h-full object-contain"
                 />
               </div>

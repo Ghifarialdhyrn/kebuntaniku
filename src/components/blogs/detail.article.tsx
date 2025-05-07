@@ -100,7 +100,7 @@ export default function BlogPost() {
         >
           <FaArrowLeft className="text-gray-600 cursor-pointer" />
         </button>
-        <img
+        <Image
           src={post.image}
           alt={post.title}
           width={800}
@@ -129,7 +129,7 @@ export default function BlogPost() {
         <div className="bg-[#F8F7F0] p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">Latest Posts</h2>
           <div className="flex items-center space-x-4 mb-3 p-2 rounded-lg hover:bg-white">
-            <img
+            <Image
               src={post.image}
               alt={post.title}
               width={50}

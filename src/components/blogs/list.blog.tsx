@@ -135,7 +135,7 @@ export default function ListBlog() {
             className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl duration-300 w-76"
           >
             <div className="relative">
-              <img
+              <Image
                 src={post.image}
                 alt={post.title}
                 width={400}

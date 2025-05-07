@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -35,7 +36,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center py-4 px-16 text-sm">
         {/* Logo and Social Icons */}
         <div className="flex items-center space-x-6">
-          <img src="/logo.png" alt="Agrios" className="h-12" />
+          <Image src="/logo.png" alt="Agrios" width={500} height={48} className="h-12" />
           <div className="flex space-x-4">
             <FaTwitter className="text-gray-500 hover:text-gray-700 cursor-pointer" />
             <FaFacebookF className="text-gray-500 hover:text-gray-700 cursor-pointer" />

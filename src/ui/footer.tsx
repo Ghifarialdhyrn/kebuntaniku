@@ -11,6 +11,7 @@ import {
 import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
 import contentfulClient from "@/contentful/contentfulClient";
 import { Entry, Asset } from "contentful";
+import Image from "next/image";
 
 interface BlogPost {
   title: string;
@@ -65,7 +66,7 @@ export default function Footer() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo & Description */}
         <div>
-          <img src="/logo.png" alt="Agriculture Logo" className="h-24 mb-4" />
+          <Image src="/logo.png" alt="Agriculture Logo" width={500} height={96} className="h-24 mb-4" />
           <p className="text-gray-400 text-justify">
             Kebun Taniku adalah platform yang menghubungkan petani dan
             masyarakat di Kota Bandung untuk mendistribusikan sayuran dan buah

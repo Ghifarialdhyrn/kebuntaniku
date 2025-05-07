@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 const BannerAbout = () => {
@@ -17,7 +18,7 @@ const BannerAbout = () => {
       <div className="absolute bottom-0 w-full py-8 bg-black bg-opacity-90 text-white">
         <div className="container mx-auto flex justify-center items-center gap-16 relative text-gray-400">
           <div className="absolute left-[-50px]">
-            <img src="/sayura.png" alt="" className="w-[300px] h-[100px]" />
+            <Image src="/sayura.png" alt="" width={300} height={100} className="w-[300px] h-[100px]" />
           </div>
           <div className="text-center">
             <h2 className="text-lg font-base">Agriculture Products</h2>

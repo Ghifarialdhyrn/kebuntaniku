@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "contentful";
+import Image from "next/image";
 
 // Membuat client Contentful
 const contentfulClient = createClient({
@@ -77,9 +78,11 @@ const ListProducts = () => {
               key={product.sys.id}
               className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
             >
-              <img
+              <Image
                 src={product.fields.image.fields.file.url}
                 alt={product.fields.productName}
+                width={500}
+                height={192}
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
