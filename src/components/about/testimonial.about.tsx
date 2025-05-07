@@ -56,7 +56,7 @@ const TestimonialAbout = () => {
             key={index}
             className="bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition duration-300 flex flex-col items-center text-center"
           >
-            <Image
+            <img
               src={testimonial.image}
               alt={testimonial.name}
               width={96}

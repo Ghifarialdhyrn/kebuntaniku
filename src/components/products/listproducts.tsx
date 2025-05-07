@@ -78,7 +78,7 @@ const ListProducts = () => {
               key={product.sys.id}
               className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
             >
-              <Image
+              <img
                 src={product.fields.image.fields.file.url}
                 alt={product.fields.productName}
                 width={500}

@@ -43,7 +43,7 @@ const NavbarHome: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/">
-            <Image
+            <img
               src="/logo.png"
               alt="Kebun Taniku"
               width={500}
@@ -88,7 +88,7 @@ const NavbarHome: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <Link
+          <a
             href="https://wa.me/6285951816788"
             target="_blank"
             className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition"

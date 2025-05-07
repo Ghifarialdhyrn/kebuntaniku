@@ -10,7 +10,7 @@ const Descriptions = () => {
         <div className="relative flex justify-center items-center h-[500px]">
           <div className="absolute top-5 left-5 bg-lime-300 w-[250px] h-[250px] rounded-xl -z-10"></div>
           <div className="rounded-xl overflow-hidden">
-            <Image
+            <img
               src="/desc1.png"
               alt="Agriculture"
               width={400}
@@ -19,7 +19,7 @@ const Descriptions = () => {
             />
           </div>
           <div className="absolute bottom-0 left-12 rounded-xl overflow-hidden shadow-lg">
-            <Image
+            <img
               src="/desc2.png"
               alt="Farmer"
               width={250}
