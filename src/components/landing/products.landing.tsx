@@ -50,7 +50,7 @@ export default function ProductsHome() {
               className="bg-gray-50 p-6 rounded-lg shadow-lg text-center"
             >
               <div className="relative w-full h-48 mb-4">
-                <Image
+                <img
                   src={product.fields.image.fields.file.url} // Mengambil URL gambar dari Contentful
                   alt={product.fields.productName}
                   width={500}
@@ -98,11 +98,11 @@ export default function ProductsHome() {
         })}
       </div>
 
-      <Link href="/products">
+      <a href="/products">
         <button className="mt-16 px-6 py-3 bg-[#5ECDCF] text-black text-lg font-semibold rounded-lg hover:bg-[#5ECDCF] hover:text-white hover:cursor-pointer transition">
           See More
         </button>
-      </Link>
+      </a>
     </section>
   );
 }
