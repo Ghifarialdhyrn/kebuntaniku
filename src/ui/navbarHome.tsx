@@ -1,7 +1,5 @@
 "use client";
 
-import { Link } from "lucide-react";
-import Image from "next/image";
 import {
   FaFacebookF,
   FaInstagram,
@@ -13,6 +11,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 
 const NavbarHome: React.FC = () => {
+
   const handleScroll = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -42,15 +41,13 @@ const NavbarHome: React.FC = () => {
       <nav className="bg-white shadow-md py-4 px-32 flex justify-between items-center fixed top-0 w-full z-50">
         {/* Logo */}
         <div className="flex items-center">
-          <Link href="/">
+          <a href="/">
             <img
               src="/logo.png"
               alt="Kebun Taniku"
-              width={500}
-              height={64}
               className="h-16 scale-125"
             />
-          </Link>
+          </a>
         </div>
 
         {/* Navigation Links */}
@@ -91,10 +88,12 @@ const NavbarHome: React.FC = () => {
           <a
             href="https://wa.me/6285951816788"
             target="_blank"
+            rel="noopener noreferrer"
             className="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition"
-          />
+          >
             <FaWhatsapp className="text-xl" />
             <span>Contact</span>
+          </a>
         </div>
       </nav>
     </div>
