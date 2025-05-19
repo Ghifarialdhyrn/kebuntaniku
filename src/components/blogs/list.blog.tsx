@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import contentfulClient from "@/contentful/contentfulClient";
 import { TypeBlogKebunTanikuSkeleton } from "@/contentful/types/blogKebunTaniku.type";
 import { Entry, Asset } from "contentful";
@@ -21,7 +20,26 @@ export default function ListBlog() {
   const [filter, setFilter] = useState<string>("All");
   const [sort, setSort] = useState<string>("name");
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 6;
+
+  // State untuk items per page, default 6
+  const [itemsPerPage, setItemsPerPage] = useState<number>(6);
+
+  // Set itemsPerPage berdasarkan lebar layar saat mount dan resize
+  useEffect(() => {
+    function updateItemsPerPage() {
+      if (window.innerWidth < 640) {
+        // mobile: 2 items
+        setItemsPerPage(2);
+      } else {
+        // desktop/tablet: 6 items
+        setItemsPerPage(6);
+      }
+    }
+    updateItemsPerPage();
+
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -94,20 +112,20 @@ export default function ListBlog() {
   const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
 
   return (
-    <div className="w-full flex flex-col items-center mx-auto p-6 max-w-7xl min-h-auto">
+    <div className="w-full flex flex-col items-center mx-auto px-4 sm:px-6 py-6 max-w-7xl">
       {/* Search, Filter, Sort */}
-      <div className="flex flex-wrap gap-2 justify-center mb-6">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 justify-center mb-6 w-full">
         <input
           type="text"
           placeholder="Search by title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2 w-64 shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="border border-gray-300 rounded-lg p-2 w-full sm:w-64 shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
         />
         <select
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2 shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="border border-gray-300 rounded-lg p-2 w-full sm:w-auto shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
         >
           <option value="All">All Categories</option>
           <option value="Urban Farming">Urban Farming</option>
@@ -120,7 +138,7 @@ export default function ListBlog() {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="border border-gray-300 rounded-lg p-2 shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="border border-gray-300 rounded-lg p-2 w-full sm:w-auto shadow-md focus:outline-none focus:ring-2 focus:ring-green-400"
         >
           <option value="name">Name</option>
           <option value="date">Release Date</option>
@@ -128,11 +146,11 @@ export default function ListBlog() {
       </div>
 
       {/* List Blog */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
         {paginatedPosts.map((post, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl duration-300 w-76"
+            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl duration-300 w-full"
           >
             <div className="relative">
               <img
@@ -168,7 +186,7 @@ export default function ListBlog() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4 gap-2">
+      <div className="flex flex-wrap justify-center mt-6 gap-2 w-full">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}

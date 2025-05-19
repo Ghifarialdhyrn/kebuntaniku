@@ -9,9 +9,10 @@ const services = [
 
 const ActivitiesService: React.FC = () => {
   return (
-    <section className="max-w-6xl mx-auto px-6 py-16 font-sans">
+    <section className="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16 font-sans">
       <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-        <div className="w-1/2 md:w-1/2 ml-28">
+        {/* Image Section */}
+        <div className="w-full md:w-1/2 flex justify-center md:justify-start">
           <Image
             src="/service-05.png"
             alt="Agriculture Image"
@@ -20,9 +21,13 @@ const ActivitiesService: React.FC = () => {
             className="rounded-xl shadow-lg"
           />
         </div>
+
+        {/* Text Section */}
         <div className="w-full md:w-1/2">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">What We Do</h1>
-          <h2 className="text-2xl font-semibold text-green-700 mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            What We Do
+          </h1>
+          <h2 className="text-xl md:text-2xl font-semibold text-green-700 mb-6">
             Healthy Food for Good Growth
           </h2>
           <p className="text-gray-700 text-base leading-relaxed mb-4 text-justify">
@@ -42,14 +47,15 @@ const ActivitiesService: React.FC = () => {
             gaya hidup sehat di masyarakat.
           </p>
 
-          <div className="flex justify-center gap-6 mt-6">
+          {/* Service Icons */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`shadow-md w-40 h-24 rounded-xl flex flex-col items-center justify-center ${service.bgColor}`}
+                className={`shadow-md w-full h-24 rounded-xl flex flex-col items-center justify-center ${service.bgColor}`}
               >
-                <div className="text-4xl mb-3">{service.icon}</div>
-                <h3 className="text-md font-bold text-white">
+                <div className="text-3xl mb-2">{service.icon}</div>
+                <h3 className="text-sm font-bold text-white">
                   {service.title}
                 </h3>
               </div>

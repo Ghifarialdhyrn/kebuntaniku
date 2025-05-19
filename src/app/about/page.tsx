@@ -13,27 +13,27 @@ export default function About() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <div className="flex flex-grow justify-center items-center mb-[-100px]">
+      <div className="flex flex-grow justify-center items-center pb-12 sm:pb-16">
         <HeroAbout />
       </div>
 
-      <div className="flex flex-grow justify-center items-center mb-[-100px]">
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <Descriptions />
       </div>
 
-      <div className="flex flex-grow justify-center items-center">
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <BannerAbout />
       </div>
 
-      <div className="flex flex-grow justify-center items-center">
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <TestimonialAbout />
       </div>
 
-      <div className="flex flex-grow justify-center items-center">
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <TeamMembers />
       </div>
 
-      <div className="bg-[#f8f5f0] w-full flex flex-grow justify-center items-center">
+      <div className="bg-[#f8f5f0] w-full flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <LocationAbout />
       </div>
 
@@ -42,3 +42,4 @@ export default function About() {
     </div>
   );
 }
+

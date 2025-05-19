@@ -1,11 +1,10 @@
-import Image from "next/image";
 import {
   FaRegHandshake,
   FaFlask,
   FaBuilding,
   FaRegCreditCard,
   FaUsers,
-} from "react-icons/fa"; // Import different icons
+} from "react-icons/fa";
 
 const farmers = [
   {
@@ -42,30 +41,29 @@ const farmers = [
 
 export default function TeamMembers() {
   return (
-    <div className="py-16 text-center">
+    <div className="py-16 text-center px-4 sm:px-6 lg:px-8">
       <h2 className="text-yellow-600 text-xl font-semibold">Team Members</h2>
       <h1 className="text-4xl font-bold mt-2 mb-12">Meet Our Farmers</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 justify-items-center">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 justify-items-center">
         {farmers.map((farmer, index) => (
           <div
             key={index}
-            className="relative bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-xs md:max-w-sm lg:max-w-md transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+            className="relative bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-xs sm:max-w-sm md:max-w-md transform transition duration-500 hover:scale-105 hover:shadow-2xl"
           >
             <img
               src={farmer.image}
               alt={farmer.name}
               width={500}
               height={320}
-              className="w-full h-72 object-cover"
+              className="w-full h-64 sm:h-72 md:h-80 object-cover"
             />
 
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-4">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-4 flex justify-center items-center">
               <div className="flex items-center gap-4">
-                {farmer.icon} {/* Render the icon with applied classes */}
+                {farmer.icon}
                 <div>
-                  <h3 className="text-lg font-bold text-white">
-                    {farmer.name}
-                  </h3>
+                  <h3 className="text-lg font-bold text-white">{farmer.name}</h3>
                   <p className="text-gray-300">{farmer.role}</p>
                 </div>
               </div>
