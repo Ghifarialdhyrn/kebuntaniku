@@ -28,7 +28,7 @@ const farmers = [
   {
     name: "Mahesa Diva N",
     role: "Internal",
-    image: "/mahes.jpg",
+    image: "/mahes.png",
     icon: <FaUsers className="h-6 w-6 text-green-600" />,
   },
   {
