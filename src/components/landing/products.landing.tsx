@@ -56,7 +56,7 @@ export default function ProductsHome() {
             slidesPerView={1}
             className="w-full"
           >
-            {products.map((product) => {
+            {products.slice(0, 6).map((product) => {
               const rating = product.fields.rating || 0;
               const fullStars = Math.floor(rating);
               const halfStar = rating % 1 !== 0;
@@ -114,7 +114,7 @@ export default function ProductsHome() {
 
         {/* Desktop Grid View */}
         <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 gap-6">
-          {products.map((product) => {
+          {products.slice(0, 6).map((product) => {
             const rating = product.fields.rating || 0;
             const fullStars = Math.floor(rating);
             const halfStar = rating % 1 !== 0;
@@ -172,7 +172,7 @@ export default function ProductsHome() {
       </div>
 
       {/* Button to See More */}
-      <div className="text-center mt-12">
+      <div className="text-center mt-0 sm:mt-10">
         <Link href="/products">
           <button className="px-6 py-3 bg-[#5ECDCF] text-black text-base font-semibold rounded-lg hover:bg-[#50b8b9] hover:text-white transition">
             See More

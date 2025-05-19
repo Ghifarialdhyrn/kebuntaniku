@@ -16,13 +16,13 @@ export default function Hero() {
 
       {/* Main Content */}
 <div className="relative z-10 -mt-20 sm:-mt-12 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 flex flex-col justify-center items-center sm:items-start max-w-screen-xl w-full text-center sm:text-left">
-  <h1 className="text-yellow-400 text-5xl sm:text-4xl md:text-6xl font-bold leading-tight">
+  <h1 className="text-yellow-400 text-4xl sm:text-4xl md:text-6xl font-bold leading-tight">
     Agriculture
   </h1>
-  <h1 className="text-white text-5xl sm:text-4xl md:text-6xl font-bold leading-tight mb-4">
+  <h1 className="text-white text-4xl sm:text-4xl md:text-6xl font-bold leading-tight mb-4">
     & Organic Market
   </h1>
-  <button className="mt-4 px-6 py-3 bg-[#5ECDCF] text-black text-base sm:text-lg font-semibold rounded-lg hover:bg-[#5db9ba] hover:text-yellow-300 transition">
+  <button className="mt-4 mb-28 sm:mb-20 px-6 py-3 bg-[#5ECDCF] text-black text-base sm:text-lg font-semibold rounded-lg hover:bg-[#5db9ba] hover:text-yellow-300 transition">
     Show Now
   </button>
 </div>
