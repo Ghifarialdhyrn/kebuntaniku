@@ -49,7 +49,7 @@ const NavbarHome: React.FC = () => {
         </a>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-black">
+        <div className="hidden md:flex items-center gap-20 text-sm font-medium text-black">
           {["home", "aboutHome", "productsHome", "servicesHome", "blogsHome"].map((id, idx) => (
             <span
               key={id}

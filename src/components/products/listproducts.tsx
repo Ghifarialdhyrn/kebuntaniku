@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "contentful";
+import Loader from "../global/Loader";
 
 // Membuat client Contentful
 const contentfulClient = createClient({
@@ -15,6 +16,7 @@ const ListProducts = () => {
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState<any[]>([]);
   const [itemsPerPage, setItemsPerPage] = useState(8); // Responsif
+  const [loading, setLoading] = useState(true); // state loading
 
   useEffect(() => {
     const handleResize = () => {
@@ -33,6 +35,7 @@ const ListProducts = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true); // mulai loading
       try {
         const response = await contentfulClient.getEntries({
           content_type: "productsKebunTaniku",
@@ -40,6 +43,8 @@ const ListProducts = () => {
         setProducts(response.items);
       } catch (error) {
         console.error("Error fetching data from Contentful:", error);
+      } finally {
+        setLoading(false); // selesai loading
       }
     };
 
@@ -75,6 +80,7 @@ const ListProducts = () => {
         <select
           onChange={(e) => setCategory(e.target.value)}
           className="p-3 w-full sm:w-64 bg-white border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500"
+          value={category}
         >
           <option value="">All Categories</option>
           <option value="Sayuran Daun">Sayuran Daun</option>
@@ -86,78 +92,94 @@ const ListProducts = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {paginatedProducts.map((product) => (
-          <div
-            key={product.sys.id}
-            className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
-          >
-            <img
-              src={product.fields.image.fields.file.url}
-              alt={product.fields.productName}
-              className="w-full h-48 object-cover"
-              loading="lazy"
-            />
-            <div className="p-4">
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
-                {product.fields.productName}
-              </h3>
-              <p className="text-gray-500 text-sm sm:text-base">
-                {product.fields.categories}
-              </p>
-              <div className="flex items-baseline justify-center gap-2 mt-2">
-                <p className="text-green-600 font-bold text-base sm:text-lg">
-                  {product.fields.price
-                    ? `Rp ${product.fields.price
-                        .toFixed(0)
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
-                    : "Rp 0"}
-                </p>
+      {/* Loader tampil jika loading */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Render skeleton card sesuai jumlah itemsPerPage */}
+          {[...Array(itemsPerPage)].map((_, i) => (
+            <Loader key={i} type="card" />
+          ))}
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {paginatedProducts.map((product) => (
+              <div
+                key={product.sys.id}
+                className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+              >
+                <img
+                  src={product.fields.image.fields.file.url}
+                  alt={product.fields.productName}
+                  className="w-full h-48 object-cover"
+                  loading="lazy"
+                />
+                <div className="p-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
+                    {product.fields.productName}
+                  </h3>
+                  <p className="text-gray-500 text-sm sm:text-base">
+                    {product.fields.categories}
+                  </p>
+                  <div className="flex items-baseline justify-center gap-2 mt-2">
+                    <p className="text-green-600 font-bold text-base sm:text-lg">
+                      {product.fields.price
+                        ? `Rp ${product.fields.price
+                            .toFixed(0)
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`
+                        : "Rp 0"}
+                    </p>
+                  </div>
+                  <div className="flex items-baseline justify-center gap-2 mt-2">
+                    <p className="text-gray-500 font-bold text-sm sm:text-base">
+                      {product.fields.soldItems
+                        ? product.fields.soldItems
+                        : "0"}{" "}
+                      Sold
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-baseline justify-center gap-2 mt-2">
-                <p className="text-gray-500 font-bold text-sm sm:text-base">
-                  {product.fields.soldItems ? product.fields.soldItems : "0"} Sold
-                </p>
-              </div>
-            </div>
+            ))}
+
+            {/* Placeholder agar grid tetap rapi */}
+            {Array.from({ length: itemsPerPage - paginatedProducts.length }).map(
+              (_, index) => (
+                <div
+                  key={`placeholder-${index}`}
+                  className="bg-transparent rounded-xl"
+                />
+              )
+            )}
           </div>
-        ))}
 
-        {Array.from({ length: itemsPerPage - paginatedProducts.length }).map(
-          (_, index) => (
-            <div
-              key={`placeholder-${index}`}
-              className="bg-transparent rounded-xl"
-            />
-          )
-        )}
-      </div>
-
-      <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-        <button
-          onClick={() => setPage(page - 1)}
-          disabled={page === 1}
-          className={`px-4 py-2 rounded-lg text-white transition w-full sm:w-auto ${
-            page === 1 ? "bg-gray-300" : "bg-green-500 hover:bg-green-600"
-          }`}
-        >
-          Previous
-        </button>
-        <span className="text-gray-600 font-semibold pt-1.5 text-center">
-          Page {page}
-        </span>
-        <button
-          onClick={() => setPage(page + 1)}
-          disabled={page * itemsPerPage >= filteredProducts.length}
-          className={`px-4 py-2 rounded-lg text-white transition w-full sm:w-auto ${
-            page * itemsPerPage >= filteredProducts.length
-              ? "bg-gray-300"
-              : "bg-green-500 hover:bg-green-600"
-          }`}
-        >
-          Next
-        </button>
-      </div>
+          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+              className={`px-4 py-2 rounded-lg text-white transition w-full sm:w-auto ${
+                page === 1 ? "bg-gray-300" : "bg-green-500 hover:bg-green-600"
+              }`}
+            >
+              Previous
+            </button>
+            <span className="text-gray-600 font-semibold pt-1.5 text-center">
+              Page {page}
+            </span>
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page * itemsPerPage >= filteredProducts.length}
+              className={`px-4 py-2 rounded-lg text-white transition w-full sm:w-auto ${
+                page * itemsPerPage >= filteredProducts.length
+                  ? "bg-gray-300"
+                  : "bg-green-500 hover:bg-green-600"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

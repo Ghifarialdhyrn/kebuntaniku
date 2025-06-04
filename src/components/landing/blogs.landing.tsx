@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import "swiper/css/pagination";                        // Import Pagination CSS
+import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -62,7 +62,7 @@ const BlogSectionHome = () => {
           };
         });
 
-        setBlogPosts(posts.slice(0, 5));
+        setBlogPosts(posts.slice(0, 4)); // ✅ BATAS MAKSIMAL 4 CARD
       } catch (error) {
         console.error("Error fetching data from Contentful:", error);
       }
@@ -75,7 +75,6 @@ const BlogSectionHome = () => {
     return (field as Asset)?.fields?.file !== undefined;
   };
 
-  // Card JSX reusable function
   const renderCard = (post: BlogPost, index: number) => (
     <div
       key={index}
@@ -124,49 +123,47 @@ const BlogSectionHome = () => {
         Check out our blog posts
       </h2>
 
-      {/* Desktop / Tablet Grid */}
+      {/* Grid untuk tablet dan desktop */}
       <div className="hidden sm:grid mt-8 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
         {blogPosts.map((post, index) => renderCard(post, index))}
       </div>
 
-      {/* Mobile Carousel */}
-      {/* Mobile Carousel */}
-<div className="sm:hidden mt-8 relative">
-  {/* Swiper Carousel */}
-  <Swiper
-    modules={[Pagination, Navigation]} // Tambahkan Navigation module
-    spaceBetween={16}
-    slidesPerView={1.1}
-    centeredSlides={true}
-    loop={true}
-    pagination={{
-      clickable: true,
-      el: ".custom-pagination",
-    }}
-    navigation={{
-      prevEl: ".custom-prev",
-      nextEl: ".custom-next",
-    }}
-    className="pb-10"
-  >
-    {blogPosts.map((post, index) => (
-      <SwiperSlide key={index}>{renderCard(post, index)}</SwiperSlide>
-    ))}
-  </Swiper>
+      {/* Carousel untuk mobile */}
+      <div className="sm:hidden mt-8 relative">
+        <Swiper
+          modules={[Pagination, Navigation]}
+          spaceBetween={16}
+          slidesPerView={1.1}
+          centeredSlides={true}
+          loop={true}
+          pagination={{
+            clickable: true,
+            el: ".custom-pagination",
+          }}
+          navigation={{
+            prevEl: ".custom-prev",
+            nextEl: ".custom-next",
+          }}
+          className="pb-10"
+        >
+          {blogPosts.map((post, index) => (
+            <SwiperSlide key={index}>{renderCard(post, index)}</SwiperSlide>
+          ))}
+        </Swiper>
 
-  {/* Dot Pagination */}
-  <div className="custom-pagination absolute left-0 right-0 bottom-0 flex justify-center gap-2 mt-4 z-10" />
+        {/* Dot Pagination */}
+        <div className="custom-pagination absolute left-0 right-0 bottom-0 flex justify-center gap-2 mt-4 z-10" />
 
-  {/* Prev & Next Buttons */}
-  <button className="custom-prev absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow">
-    <ArrowLeft className="w-5 h-5 text-black" />
-  </button>
-  <button className="custom-next absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow">
-    <ArrowRight className="w-5 h-5 text-black" />
-  </button>
-</div>
+        {/* Prev & Next Buttons */}
+        <button className="custom-prev absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow">
+          <ArrowLeft className="w-5 h-5 text-black" />
+        </button>
+        <button className="custom-next absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow">
+          <ArrowRight className="w-5 h-5 text-black" />
+        </button>
+      </div>
 
-
+      {/* Tombol Lihat Semua */}
       <Link href="/blogs">
         <button className="mt-8 mb-4 sm:mt-16 px-5 py-3 bg-[#5ECDCF] text-black text-base sm:text-lg font-semibold rounded-lg hover:bg-[#5ECDCF] hover:text-white hover:cursor-pointer transition">
           See More

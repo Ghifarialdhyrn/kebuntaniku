@@ -12,9 +12,10 @@ import {
   FaTwitter,
   FaInstagram,
 } from "react-icons/fa";
-import RichText from "../global/RichText";
-import { Document } from "@contentful/rich-text-types";
 import { FaXTwitter } from "react-icons/fa6";
+import RichText from "../global/RichText";
+import Loader from "../global/Loader"; // ⬅️ Import Loader
+import { Document } from "@contentful/rich-text-types";
 
 interface Post {
   title: string;
@@ -23,14 +24,14 @@ interface Post {
   category: string;
   image: string;
   body: Document;
-  slug: string; // Tambahkan slug di sini
+  slug: string;
 }
 
 export default function BlogPost() {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [slug, setSlug] = useState<string | null>(null);
-  const [latestPosts, setLatestPosts] = useState<Post[]>([]); // Untuk latest posts
+  const [latestPosts, setLatestPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const url = window.location.pathname;
@@ -38,7 +39,6 @@ export default function BlogPost() {
     setSlug(slug);
   }, []);
 
-  // Fetch post utama berdasarkan slug
   useEffect(() => {
     if (slug) {
       const fetchPost = async () => {
@@ -57,22 +57,13 @@ export default function BlogPost() {
               : "/default-image.jpg";
 
             const postData: Post = {
-              title:
-                typeof item.fields.title === "string" ? item.fields.title : "",
-              author:
-                typeof item.fields.author === "string"
-                  ? item.fields.author
-                  : "",
-              date:
-                typeof item.fields.date === "string" ? item.fields.date : "",
-              category:
-                typeof item.fields.categories === "string"
-                  ? item.fields.categories
-                  : "",
+              title: typeof item.fields.title === "string" ? item.fields.title : "",
+              author: typeof item.fields.author === "string" ? item.fields.author : "",
+              date: typeof item.fields.date === "string" ? item.fields.date : "",
+              category: typeof item.fields.categories === "string" ? item.fields.categories : "",
               image: imageUrl,
               body: item.fields.body || null,
-              slug:
-                typeof item.fields.slug === "string" ? item.fields.slug : "",
+              slug: typeof item.fields.slug === "string" ? item.fields.slug : "",
             };
             setPost(postData);
           } else {
@@ -89,7 +80,6 @@ export default function BlogPost() {
     }
   }, [slug]);
 
-  // Fetch latest posts (ambil 1 post terbaru)
   useEffect(() => {
     const fetchLatestPosts = async () => {
       try {
@@ -97,7 +87,7 @@ export default function BlogPost() {
           await contentfulClient.getEntries<TypeBlogKebunTanikuSkeleton>({
             content_type: "blogKebunTaniku",
             order: ["-fields.date"],
-            limit: 1, // hanya 1 post terbaru
+            limit: 1,
           });
 
         const posts: Post[] = response.items.map((item) => {
@@ -113,7 +103,7 @@ export default function BlogPost() {
             category: typeof item.fields.categories === "string" ? item.fields.categories : "",
             image: imageUrl,
             body: item.fields.body || null,
-            slug: typeof item.fields.slug === "string" ? item.fields.slug : "", // ambil slug
+            slug: typeof item.fields.slug === "string" ? item.fields.slug : "",
           };
         });
 
@@ -127,14 +117,13 @@ export default function BlogPost() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />; // ⬅️ Gunakan Loader saat data dimuat
   }
 
   if (!post) {
     return <div>Post not found</div>;
   }
 
-  // Fungsi untuk buka jendela share dengan ukuran dan URL sesuai platform
   function openShareWindow(url: string) {
     const width = 600;
     const height = 400;
@@ -147,7 +136,6 @@ export default function BlogPost() {
     );
   }
 
-  // Handle click share sesuai media sosial
   function handleShare(platform: string) {
     const pageUrl = encodeURIComponent(window.location.href);
     const postTitle = encodeURIComponent(post!.title);
@@ -169,7 +157,6 @@ export default function BlogPost() {
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`;
         break;
       case "instagram":
-        // Instagram tidak support share URL langsung, kita arahkan ke homepage Instagram saja
         shareUrl = `https://www.instagram.com/`;
         break;
       default:
@@ -220,7 +207,9 @@ export default function BlogPost() {
           {latestPosts.length > 0 && (
             <div
               className="flex items-center space-x-4 mb-3 p-2 rounded-lg hover:bg-white cursor-pointer"
-              onClick={() => (window.location.href = `/blogs/${latestPosts[0].slug}`)}
+              onClick={() =>
+                (window.location.href = `/blogs/${latestPosts[0].slug}`)
+              }
             >
               <img
                 src={latestPosts[0].image}
@@ -230,8 +219,12 @@ export default function BlogPost() {
                 className="rounded-md object-cover"
               />
               <div>
-                <p className="text-xs text-gray-600">by {latestPosts[0].author}</p>
-                <p className="text-sm font-medium">{latestPosts[0].title}</p>
+                <p className="text-xs text-gray-600">
+                  by {latestPosts[0].author}
+                </p>
+                <p className="text-sm font-medium">
+                  {latestPosts[0].title}
+                </p>
               </div>
             </div>
           )}

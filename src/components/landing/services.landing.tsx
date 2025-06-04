@@ -47,16 +47,6 @@ export default function ServicesHome() {
       </div>
 
       {/* Konten utama */}
-      <div className="relative z-10 text-center text-white max-w-[1000px] px-4 sm:px-6">
-        <h1 className="text-4xl sm:text-6xl font-bold mt-20 mb-10 leading-snug">
-          Be Healthy & Eat Only Fresh Organic Vegetables
-        </h1>
-        <a href="/services">
-          <button className="mt-4 px-6 py-2 bg-[#5ECDCF] text-black rounded-lg font-semibold hover:bg-[#5ECDCF] hover:text-white hover:cursor-pointer transition">
-            Learn More
-          </button>
-        </a>
-      </div>
 
       {/* Cards produk: Carousel untuk mobile, grid untuk desktop */}
       <div className="absolute z-10 w-full max-w-[1000px] px-4 sm:px-0">
@@ -81,7 +71,7 @@ export default function ServicesHome() {
                     <h2 className="text-2xl font-bold mt-2">{product.title}</h2>
                     <a href="https://wa.me/6285951816788">
                       <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer">
-                        {product.buttonText}
+                        <p className="font-bold">{product.buttonText}</p>
                       </button>
                     </a>
                   </div>

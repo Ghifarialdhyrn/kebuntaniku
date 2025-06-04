@@ -10,6 +10,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import Loader from "../global/Loader";
+
+
 
 // Contentful Client Setup
 const contentfulClient = createClient({
@@ -19,21 +22,42 @@ const contentfulClient = createClient({
 
 export default function ProductsHome() {
   const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const response = await contentfulClient.getEntries({
           content_type: "productsKebunTaniku",
         });
         setProducts(response.items);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
+
+  if (loading) {
+    // Tampilkan loader saat data sedang dimuat
+    return (
+      <section className="py-12 bg-white w-full">
+        <div className="text-center mb-10 px-4">
+          <p className="text-yellow-600 text-sm font-semibold uppercase tracking-wide">
+            Recently Added
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+            Latest Products
+          </h2>
+        </div>
+        <Loader type="default" />
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 bg-white w-full">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import contentfulClient from "@/contentful/contentfulClient";
 import { TypeBlogKebunTanikuSkeleton } from "@/contentful/types/blogKebunTaniku.type";
 import { Entry, Asset } from "contentful";
+import Loader from "../global/Loader";
 
 interface Post {
   title: string;
@@ -16,33 +17,29 @@ interface Post {
 
 export default function ListBlog() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // ✅ Loading State
   const [search, setSearch] = useState<string>("");
   const [filter, setFilter] = useState<string>("All");
   const [sort, setSort] = useState<string>("name");
   const [currentPage, setCurrentPage] = useState<number>(1);
-
-  // State untuk items per page, default 6
   const [itemsPerPage, setItemsPerPage] = useState<number>(6);
 
-  // Set itemsPerPage berdasarkan lebar layar saat mount dan resize
   useEffect(() => {
     function updateItemsPerPage() {
       if (window.innerWidth < 640) {
-        // mobile: 2 items
         setItemsPerPage(2);
       } else {
-        // desktop/tablet: 6 items
         setItemsPerPage(6);
       }
     }
     updateItemsPerPage();
-
     window.addEventListener("resize", updateItemsPerPage);
     return () => window.removeEventListener("resize", updateItemsPerPage);
   }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true); // ✅ Start Loading
       try {
         const response =
           await contentfulClient.getEntries<TypeBlogKebunTanikuSkeleton>({
@@ -85,6 +82,8 @@ export default function ListBlog() {
         setPosts(mappedPosts);
       } catch (error) {
         console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false); // ✅ End Loading
       }
     };
 
@@ -145,86 +144,93 @@ export default function ListBlog() {
         </select>
       </div>
 
-      {/* List Blog */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {paginatedPosts.map((post, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl duration-300 w-full"
-          >
-            <div className="relative">
-              <img
-                src={post.image}
-                alt={post.title}
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 text-sm rounded-md">
-                {post.category}
-              </div>
-            </div>
-            <div className="p-3 flex flex-col justify-between h-full">
-              <p className="text-gray-500 text-sm">
-                {new Date(post.date).toLocaleDateString("id-ID", {
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </p>
-              <h3 className="text-lg font-semibold mt-1">{post.title}</h3>
-              <p className="text-gray-600 text-sm mt-1">by {post.author}</p>
-              <a
-                href={`/blogs/${post.slug}`}
-                className="text-green-600 font-medium mt-2 text-right text-sm"
+      {/* Loading Spinner menggunakan Loader */}
+      {loading ? (
+        <Loader type="circle" className="w-full py-10" />
+      ) : (
+        <>
+          {/* Blog Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {paginatedPosts.map((post, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-transform transform hover:scale-105 hover:shadow-xl duration-300 w-full"
               >
-                Read More
-              </a>
-            </div>
+                <div className="relative">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    width={400}
+                    height={250}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="absolute top-2 left-2 bg-green-600 text-white px-2 py-1 text-sm rounded-md">
+                    {post.category}
+                  </div>
+                </div>
+                <div className="p-3 flex flex-col justify-between h-full">
+                  <p className="text-gray-500 text-sm">
+                    {new Date(post.date).toLocaleDateString("id-ID", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                  <h3 className="text-lg font-semibold mt-1">{post.title}</h3>
+                  <p className="text-gray-600 text-sm mt-1">by {post.author}</p>
+                  <a
+                    href={`/blogs/${post.slug}`}
+                    className="text-green-600 font-medium mt-2 text-right text-sm"
+                  >
+                    Read More
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Pagination */}
-      <div className="flex flex-wrap justify-center mt-6 gap-2 w-full">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-            currentPage === 1
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-green-500 text-white hover:bg-green-600"
-          }`}
-        >
-          Previous
-        </button>
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-              index + 1 === currentPage
-                ? "bg-green-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-green-400 hover:text-white"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-            currentPage === totalPages
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-green-500 text-white hover:bg-green-600"
-          }`}
-        >
-          Next
-        </button>
-      </div>
+          {/* Pagination */}
+          <div className="flex flex-wrap justify-center mt-6 gap-2 w-full">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                currentPage === 1
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-green-500 text-white hover:bg-green-600"
+              }`}
+            >
+              Previous
+            </button>
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentPage(index + 1)}
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  index + 1 === currentPage
+                    ? "bg-green-600 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-green-400 hover:text-white"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                currentPage === totalPages
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-green-500 text-white hover:bg-green-600"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
