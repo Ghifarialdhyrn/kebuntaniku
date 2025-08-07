@@ -1,11 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
-
 const products = [
   {
     id: 1,
@@ -24,87 +16,72 @@ const products = [
 ];
 
 export default function ServicesHome() {
-  // State untuk mendeteksi ukuran layar (optional)
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   return (
-    <div className="relative w-full h-[500px] flex flex-col items-center justify-center bg-cover bg-center">
+    <div className="relative w-full h-[500px] flex flex-col items-center justify-center bg-cover bg-center mt-20">
+      {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src="/hero2.jpg"
           alt="Hero Background"
-          className="w-full h-full object-cover filter brightness-50"
+          className="w-full h-full object-cover brightness-50"
         />
       </div>
 
       {/* Konten utama */}
-
-      {/* Cards produk: Carousel untuk mobile, grid untuk desktop */}
       <div className="absolute z-10 w-full max-w-[1000px] px-4 sm:px-0">
-        {isMobile ? (
-          // Carousel mobile
-          <Swiper
-            modules={[Pagination]}
-            pagination={{ clickable: true }}
-            spaceBetween={20}
-            slidesPerView={1}
-          >
-            {products.map((product) => (
-              <SwiperSlide key={product.id}>
-                <div className="relative rounded-lg shadow-lg overflow-hidden max-w-[400px] mx-auto">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="rounded-lg filter brightness-90 w-full h-auto"
-                  />
-                  <div className="absolute inset-0 bg-opacity-50 flex flex-col items-start justify-center text-white p-4">
-                    <p className="text-sm font-light">{product.description}</p>
-                    <h2 className="text-2xl font-bold mt-2">{product.title}</h2>
-                    <a href="https://wa.me/6285951816788">
-                      <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer">
-                        <p className="font-bold">{product.buttonText}</p>
-                      </button>
-                    </a>
-                  </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          // Grid desktop
-          <div className="flex gap-20 justify-center flex-wrap">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="relative rounded-lg shadow-lg w-[400px] overflow-hidden"
-              >
+        {/* Mobile: Vertical Stack */}
+        <div className="sm:hidden flex flex-col gap-4">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="relative w-full max-w-[400px] mx-auto overflow-hidden rounded-xl shadow-xl transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <div className="relative w-full h-full">
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="rounded-lg filter brightness-90 w-full h-auto"
+                  className="w-full h-auto object-cover"
                 />
-                <div className="absolute inset-0 bg-opacity-50 flex flex-col items-start justify-center text-white p-4">
+                <div className="absolute inset-0 bg-black/20 text-white p-4 flex flex-col justify-center">
                   <p className="text-sm font-light">{product.description}</p>
                   <h2 className="text-2xl font-bold mt-2">{product.title}</h2>
                   <a href="https://wa.me/6285951816788">
-                    <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer">
+                    <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer transition-colors duration-300 hover:bg-[#5ECDCF] hover:text-white">
+                      <p className="font-bold">{product.buttonText}</p>
+                    </button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: Grid Layout */}
+        <div className="hidden sm:flex gap-20 justify-center flex-wrap">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="relative w-[400px] overflow-hidden rounded-xl shadow-xl transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            >
+              <div className="relative w-full h-full">
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20 text-white p-4 flex flex-col justify-center">
+                  <p className="text-sm font-light">{product.description}</p>
+                  <h2 className="text-2xl font-bold mt-2">{product.title}</h2>
+                  <a href="https://wa.me/6285951816788">
+                    <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer transition-colors duration-300 hover:bg-[#5ECDCF] hover:text-white">
                       {product.buttonText}
                     </button>
                   </a>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

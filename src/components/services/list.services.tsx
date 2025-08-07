@@ -1,9 +1,4 @@
-"use client";
 import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
 
 const services = [
   {
@@ -28,19 +23,14 @@ const services = [
   },
 ];
 
-const ServicesCards: React.FC = () => {
+const ServicesCards = () => {
   return (
     <div className="w-full px-4">
-      {/* Carousel untuk mobile */}
-      <div className="block md:hidden">
-        <Swiper
-          spaceBetween={16}
-          slidesPerView={1.2}
-          pagination={{ clickable: true }}
-          modules={[Pagination]}
-        >
+      {/* Horizontal scroll for mobile */}
+      <div className="block md:hidden overflow-x-auto pb-4">
+        <div className="flex gap-4 w-max">
           {services.map((service, index) => (
-            <SwiperSlide key={index}>
+            <div key={index} className="flex-shrink-0 w-64">
               <div className="flex flex-col items-center gap-4">
                 <div className="relative bg-white rounded-xl shadow-lg w-full h-64 overflow-hidden transition-transform transform hover:scale-105">
                   <img
@@ -56,12 +46,12 @@ const ServicesCards: React.FC = () => {
                   <h2 className="text-md font-bold mt-8 text-center">{service.title}</h2>
                 </div>
               </div>
-            </SwiperSlide>
+            </div>
           ))}
-        </Swiper>
+        </div>
       </div>
 
-      {/* Grid untuk tablet dan desktop */}
+      {/* Grid for tablet and desktop */}
       <div className="hidden md:flex gap-6 justify-center items-center flex-wrap">
         {services.map((service, index) => (
           <div key={index} className="flex flex-col items-center gap-4">

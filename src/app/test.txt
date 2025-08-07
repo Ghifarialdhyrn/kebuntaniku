@@ -1,0 +1,1154 @@
+"use client";
+
+import { useInView } from "@/components/hooks/useInView";
+import AboutHome from "@/components/landing/about.landing";
+import BlogSectionHome from "@/components/landing/blogs.landing";
+import ContactSectionHome from "@/components/landing/contact.landing";
+import Hero from "@/components/landing/hero.landing";
+import ProductsHome from "@/components/landing/products.landing";
+import ServicesHome from "@/components/landing/services.landing";
+import Footer from "@/ui/footer";
+import NavbarHome from "@/ui/navbarHome";
+import ScrollToTopButton from "@/ui/scrollup";
+
+export default function Home() {
+  const aboutInView = useInView<HTMLDivElement>();
+  const productsInView = useInView<HTMLDivElement>();
+  const servicesInView = useInView<HTMLDivElement>();
+  const blogsInView = useInView<HTMLDivElement>();
+  const contactInView = useInView<HTMLDivElement>();
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <NavbarHome />
+      <div className="flex flex-grow justify-center items-center mb-48 px-4 sm:px-6 lg:px-0">
+        <Hero />
+      </div>
+
+      <div
+        ref={aboutInView.ref}
+        id="aboutHome"
+        className={`w-[75%] h-[500px] flex mx-auto max-w-full sm:w-[90%] sm:h-auto sm:flex-col
+          transition-opacity duration-500 ease-in-out
+          ${aboutInView.isInView ? "opacity-100" : "opacity-0"}
+        `}
+      >
+        <AboutHome />
+      </div>
+
+      <div
+        ref={productsInView.ref}
+        id="productsHome"
+        className={`w-[75%] min-h-screen flex flex-col mx-auto mb-[-200px] sm:mb-40 mt-112 sm:mt-0
+          transition-opacity duration-500 ease-in-out
+          ${productsInView.isInView ? "opacity-100" : "opacity-0"}
+        `}
+      >
+        <ProductsHome />
+      </div>
+
+      <div
+        ref={servicesInView.ref}
+        id="servicesHome"
+        className={`flex flex-grow justify-center items-center mb-24 px-4 sm:px-6 lg:px-0
+          transition-opacity duration-500 ease-in-out
+          ${servicesInView.isInView ? "opacity-100" : "opacity-0"}
+        `}
+      >
+        <ServicesHome />
+      </div>
+
+      <div
+        ref={blogsInView.ref}
+        id="blogsHome"
+        className={`flex justify-center items-center mb-16 mt-16 px-4 sm:px-6 lg:px-0
+          transition-opacity duration-500 ease-in-out
+          ${blogsInView.isInView ? "opacity-100" : "opacity-0"}
+        `}
+      >
+        <div className="w-[75%] max-w-full sm:w-[90%]">
+          <BlogSectionHome />
+        </div>
+      </div>
+
+      <div
+        ref={contactInView.ref}
+        id="contactHome"
+        className={`flex justify-center items-center h-auto px-4 sm:px-6 lg:px-0 mb-16 sm:mb-24
+          transition-opacity duration-500 ease-in-out
+          ${contactInView.isInView ? "opacity-100" : "opacity-0"}
+        `}
+      >
+        <div className="w-[75%] max-w-full sm:w-[90%]">
+          <ContactSectionHome />
+        </div>
+      </div>
+
+      <Footer />
+      <ScrollToTopButton />
+    </div>
+  );
+}
+
+"use client";
+
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaPinterest,
+  FaTwitter,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { IoLocationSharp } from "react-icons/io5";
+import { MdEmail } from "react-icons/md";
+import { useState } from "react";
+import { FiMenu, FiX } from "react-icons/fi";
+
+const NavbarHome: React.FC = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleScroll = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setMenuOpen(false);
+    }
+  };
+
+  return (
+    <div className="w-full">
+      {/* Top Bar */}
+      <div className="bg-[#5ECDCF] text-black text-xs sm:text-sm py-1.5 px-4 flex flex-col sm:flex-row justify-between items-center gap-1 sm:gap-4">
+        <div className="flex items-center gap-2 flex-wrap justify-center text-center sm:text-left">
+          <IoLocationSharp />
+          <span>Antapani, Bandung</span>
+          <MdEmail />
+          <span>kebuntaniku@gmail.com</span>
+        </div>
+        <div className="flex space-x-3 text-lg pt-1 sm:pt-0">
+          <FaTwitter className="cursor-pointer" />
+          <FaFacebookF className="cursor-pointer" />
+          <FaPinterest className="cursor-pointer" />
+          <FaInstagram className="cursor-pointer" />
+        </div>
+      </div>
+
+      {/* Main Navbar */}
+      <nav className="bg-white shadow-md py-3 px-4 sm:px-6 md:px-12 lg:px-32 flex justify-between items-center fixed top-0 w-full z-50">
+        {/* Logo */}
+        <a href="/" className="flex items-center">
+          <img src="/logo.png" alt="Kebun Taniku" className="h-10 sm:h-12" />
+        </a>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-20 text-sm font-medium text-black">
+          {["home", "aboutHome", "productsHome", "servicesHome", "blogsHome"].map((id, idx) => (
+            <span
+              key={id}
+              onClick={() => handleScroll(id)}
+              className="cursor-pointer hover:text-[#5ECDCF] transition"
+            >
+              {["Home", "About", "Products", "Services", "Blogs"][idx]}
+            </span>
+          ))}
+        </div>
+
+        {/* Contact Button */}
+        <div className="hidden md:flex">
+          <a
+            href="https://wa.me/6285951816788"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition"
+          >
+            <FaWhatsapp className="text-lg" />
+            <span>Contact</span>
+          </a>
+        </div>
+
+        {/* Hamburger */}
+        <div className="md:hidden">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="text-2xl text-black">
+            {menuOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="md:hidden fixed top-[65px] w-full bg-white shadow-md px-4 py-6 space-y-4 z-40 transition-all duration-200 ease-in-out">
+          {["home", "aboutHome", "productsHome", "servicesHome", "blogsHome"].map((id, idx) => (
+            <div
+              key={id}
+              onClick={() => handleScroll(id)}
+              className="text-black font-medium text-sm hover:text-[#5ECDCF] cursor-pointer"
+            >
+              {["Home", "About", "Products", "Services", "Blogs"][idx]}
+            </div>
+          ))}
+          <a
+            href="https://wa.me/6285951816788"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition"
+          >
+            <FaWhatsapp className="text-lg" />
+            <span>Contact</span>
+          </a>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default NavbarHome;
+
+import Image from "next/image";
+
+export default function Hero() {
+  return (
+    <section className="relative w-full min-h-[70vh] flex items-center justify-center">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/hero1.jpg"
+          alt="Hero Background"
+          fill
+          className="object-cover brightness-50"
+          quality={100}
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 -mt-20 sm:-mt-12 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 flex flex-col justify-center items-center sm:items-start max-w-screen-xl w-full text-center sm:text-left">
+        <h1 className="text-yellow-400 text-4xl sm:text-4xl md:text-6xl font-bold leading-tight">
+          Agriculture
+        </h1>
+        <h1 className="text-white text-4xl sm:text-4xl md:text-6xl font-bold leading-tight mb-4">
+          & Organic Market
+        </h1>
+        <button className="mt-4 mb-28 sm:mb-20 px-6 py-3 bg-[#5ECDCF] text-black text-base sm:text-lg font-semibold rounded-lg hover:bg-[#5db9ba] hover:text-yellow-300 transition">
+          Show Now
+        </button>
+      </div>
+
+      {/* Features Section */}
+      <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 w-[90%] sm:w-5/6 md:w-3/4 bg-white shadow-lg rounded-xl px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+        <FeatureItem
+          icon="💰"
+          title="Return Policy"
+          description="Money Back Guarantee"
+        />
+        <FeatureItem
+          icon="🚚"
+          title="Free Shipping"
+          description="Orders Over Rp. 50.000"
+        />
+        <FeatureItem
+          icon="🛒"
+          title="Store Locator"
+          description="Find Nearest Store"
+        />
+      </div>
+    </section>
+  );
+}
+
+interface FeatureItemProps {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+function FeatureItem({ icon, title, description }: FeatureItemProps) {
+  return (
+    <div className="flex flex-col items-center sm:items-start">
+      <div className="text-green-500 text-2xl sm:text-3xl">{icon}</div>
+      <h3 className="text-sm sm:text-base font-semibold mt-1 sm:mt-2">
+        {title}
+      </h3>
+      <p className="text-gray-500 text-xs sm:text-sm">{description}</p>
+    </div>
+  );
+}
+
+import Image from "next/image";
+
+export default function AboutHome() {
+  return (
+    <section className="w-full max-w-screen-xl mx-auto mb-24 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col md:flex-row rounded-xl shadow-lg overflow-hidden bg-white">
+        {/* Gambar */}
+        <div className="w-full md:w-1/2 h-64 md:h-auto relative">
+          <Image
+            src="/hero3.jpg"
+            alt="About Us"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+
+        {/* Deskripsi */}
+        <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
+            About Us
+          </h2>
+          <p className="text-gray-600 mb-6 text-sm sm:text-base text-justify leading-relaxed">
+            Kebun Taniku adalah sebuah inisiatif yang bertujuan untuk menjembatani
+            antara petani lokal dan masyarakat Kota Bandung dalam mendistribusikan
+            sayuran dan buah segar yang berkualitas. Didirikan oleh lima pemuda
+            asal Bandung, Kebun Taniku hadir untuk membantu petani dalam
+            memasarkan hasil tani mereka secara langsung kepada konsumen, sehingga
+            proses distribusi menjadi lebih efisien dan menguntungkan bagi kedua
+            belah pihak. Selain itu, Kebun Taniku juga berkomitmen untuk
+            menyediakan sayuran organik yang baik untuk kesehatan, memberikan
+            kemudahan bagi masyarakat dalam mengakses produk pertanian yang segar,
+            sehat, dan berkualitas tinggi.
+          </p>
+          <a href="/about">
+            <button className="px-5 py-3 bg-[#5ECDCF] text-black text-base font-semibold rounded-lg hover:bg-[#54b8ba] hover:text-white transition">
+              Read More
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "contentful";
+import { FaStar } from "react-icons/fa";
+import Link from "next/link";
+
+// Swiper import
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import Loader from "../global/Loader";
+
+
+
+// Contentful Client Setup
+const contentfulClient = createClient({
+  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
+  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
+});
+
+export default function ProductsHome() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await contentfulClient.getEntries({
+          content_type: "productsKebunTaniku",
+        });
+        setProducts(response.items);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    // Tampilkan loader saat data sedang dimuat
+    return (
+      <section className="py-12 bg-white w-full">
+        <div className="text-center mb-10 px-4">
+          <p className="text-yellow-600 text-sm font-semibold uppercase tracking-wide">
+            Recently Added
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+            Latest Products
+          </h2>
+        </div>
+        <Loader type="default" />
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-12 bg-white w-full">
+      <div className="text-center mb-10 px-4">
+        <p className="text-yellow-600 text-sm font-semibold uppercase tracking-wide">
+          Recently Added
+        </p>
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800">
+          Latest Products
+        </h2>
+      </div>
+
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Mobile Carousel with Swiper */}
+        <div className="sm:hidden pb-10 -mx-4 px-4">
+          <Swiper
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            slidesPerView={1}
+            className="w-full"
+          >
+            {products.slice(0, 6).map((product) => {
+              const rating = product.fields.rating || 0;
+              const fullStars = Math.floor(rating);
+              const halfStar = rating % 1 !== 0;
+
+              return (
+                <SwiperSlide key={product.sys.id}>
+                  <div className="min-w-[250px] bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-4 text-center">
+                    <div className="relative w-full h-40 mb-4">
+                      <img
+                        src={`https:${product.fields.image.fields.file.url}`}
+                        alt={product.fields.productName}
+                        className="rounded-md object-contain w-full h-full"
+                      />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                      {product.fields.productName}
+                    </h3>
+                    <p className="text-green-600 font-medium mb-2">
+                      {product.fields.price
+                        ? `Rp ${product.fields.price}`
+                        : "Rp 0"}
+                    </p>
+                    <div className="flex justify-center gap-1 mt-auto">
+                      {[...Array(5)].map((_, index) => {
+                        if (index < fullStars) {
+                          return (
+                            <FaStar
+                              key={index}
+                              className="text-yellow-500 w-4 h-4"
+                            />
+                          );
+                        } else if (index === fullStars && halfStar) {
+                          return (
+                            <FaStar
+                              key={index}
+                              className="text-yellow-400 w-4 h-4 opacity-75"
+                            />
+                          );
+                        } else {
+                          return (
+                            <FaStar
+                              key={index}
+                              className="text-yellow-200 w-4 h-4"
+                            />
+                          );
+                        }
+                      })}
+                    </div>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
+
+        {/* Desktop Grid View */}
+        <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 gap-6">
+          {products.slice(0, 6).map((product) => {
+            const rating = product.fields.rating || 0;
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 !== 0;
+
+            return (
+              <div
+                key={product.sys.id}
+                className="bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-5 text-center flex flex-col"
+              >
+                <div className="relative w-full h-48 mb-4">
+                  <img
+                    src={`https:${product.fields.image.fields.file.url}`}
+                    alt={product.fields.productName}
+                    className="rounded-md object-contain w-full h-full"
+                  />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  {product.fields.productName}
+                </h3>
+                <p className="text-green-600 font-medium mb-2">
+                  {product.fields.price
+                    ? `Rp ${product.fields.price}`
+                    : "Rp 0"}
+                </p>
+                <div className="flex justify-center gap-1 mt-auto">
+                  {[...Array(5)].map((_, index) => {
+                    if (index < fullStars) {
+                      return (
+                        <FaStar
+                          key={index}
+                          className="text-yellow-500 w-4 h-4"
+                        />
+                      );
+                    } else if (index === fullStars && halfStar) {
+                      return (
+                        <FaStar
+                          key={index}
+                          className="text-yellow-400 w-4 h-4 opacity-75"
+                        />
+                      );
+                    } else {
+                      return (
+                        <FaStar
+                          key={index}
+                          className="text-yellow-200 w-4 h-4"
+                        />
+                      );
+                    }
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Button to See More */}
+      <div className="text-center mt-0 sm:mt-10">
+        <Link href="/products">
+          <button className="px-6 py-3 bg-[#5ECDCF] text-black text-base font-semibold rounded-lg hover:bg-[#50b8b9] hover:text-white transition">
+            See More
+          </button>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+"use client";
+
+import { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination } from "swiper/modules";
+
+const products = [
+  {
+    id: 1,
+    title: "Quality Organic Food Store",
+    description: "100% ORGANIC",
+    buttonText: "Order Now",
+    image: "/image1.png",
+  },
+  {
+    id: 2,
+    title: "Healthy Products Everyday",
+    description: "100% ORGANIC",
+    buttonText: "Order Now",
+    image: "/image2.png",
+  },
+];
+
+export default function ServicesHome() {
+  // State untuk mendeteksi ukuran layar (optional)
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <div className="relative w-full h-[500px] flex flex-col items-center justify-center bg-cover bg-center">
+      <div className="absolute inset-0">
+        <img
+          src="/hero2.jpg"
+          alt="Hero Background"
+          className="w-full h-full object-cover filter brightness-50"
+        />
+      </div>
+
+      {/* Konten utama */}
+
+      {/* Cards produk: Carousel untuk mobile, grid untuk desktop */}
+      <div className="absolute z-10 w-full max-w-[1000px] px-4 sm:px-0">
+        {isMobile ? (
+          // Carousel mobile
+          <Swiper
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            slidesPerView={1}
+          >
+            {products.map((product) => (
+              <SwiperSlide key={product.id}>
+                <div className="relative rounded-lg shadow-lg overflow-hidden max-w-[400px] mx-auto">
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="rounded-lg filter brightness-90 w-full h-auto"
+                  />
+                  <div className="absolute inset-0 bg-opacity-50 flex flex-col items-start justify-center text-white p-4">
+                    <p className="text-sm font-light">{product.description}</p>
+                    <h2 className="text-2xl font-bold mt-2">{product.title}</h2>
+                    <a href="https://wa.me/6285951816788">
+                      <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer">
+                        <p className="font-bold">{product.buttonText}</p>
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          // Grid desktop
+          <div className="flex gap-20 justify-center flex-wrap">
+            {products.map((product) => (
+              <div
+                key={product.id}
+                className="relative rounded-lg shadow-lg w-[400px] overflow-hidden"
+              >
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="rounded-lg filter brightness-90 w-full h-auto"
+                />
+                <div className="absolute inset-0 bg-opacity-50 flex flex-col items-start justify-center text-white p-4">
+                  <p className="text-sm font-light">{product.description}</p>
+                  <h2 className="text-2xl font-bold mt-2">{product.title}</h2>
+                  <a href="https://wa.me/6285951816788">
+                    <button className="mt-4 px-4 py-2 bg-white text-black text-sm rounded-lg cursor-pointer">
+                      {product.buttonText}
+                    </button>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+"use client";
+
+import contentfulClient from "@/contentful/contentfulClient";
+import { TypeBlogKebunTanikuSkeleton } from "@/contentful/types/blogKebunTaniku.type";
+import { Asset } from "contentful";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+interface BlogPost {
+  title: string;
+  author: string;
+  date: string;
+  category: string;
+  image: string;
+  slug: string;
+  day: string;
+  monthYear: string;
+}
+
+const BlogSectionHome = () => {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        const response =
+          await contentfulClient.getEntries<TypeBlogKebunTanikuSkeleton>({
+            content_type: "blogKebunTaniku",
+          });
+
+        const posts = response.items.map((item) => {
+          const fields = item.fields;
+          const date =
+            typeof fields.date === "string" || typeof fields.date === "number"
+              ? new Date(fields.date)
+              : new Date();
+
+          const image = isAsset(fields.banner)
+            ? `https:${fields.banner.fields?.file?.url}` || "/default-image.jpg"
+            : "/default-image.jpg";
+
+          return {
+            title: typeof fields.title === "string" ? fields.title : "Untitled",
+            author:
+              typeof fields.author === "string" ? fields.author : "Unknown",
+            date: date.toISOString(),
+            image,
+            slug: String(fields.slug ?? ""),
+            day: date.getDate().toString(),
+            monthYear: date.toLocaleString("default", {
+              month: "short",
+              year: "numeric",
+            }),
+            category: String(fields.categories ?? "Uncategorized"),
+          };
+        });
+
+        setBlogPosts(posts.slice(0, 4)); // ✅ BATAS MAKSIMAL 4 CARD
+      } catch (error) {
+        console.error("Error fetching data from Contentful:", error);
+      }
+    };
+
+    fetchBlogPosts();
+  }, []);
+
+  const isAsset = (field: unknown): field is Asset => {
+    return (field as Asset)?.fields?.file !== undefined;
+  };
+
+  const renderCard = (post: BlogPost, index: number) => (
+    <div
+      key={index}
+      className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+    >
+      <div className="relative w-full h-48 sm:h-56">
+        <img
+          src={post.image}
+          alt={post.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div className="absolute top-3 left-3 bg-[#5ECDCF] text-white p-2 rounded-md text-center">
+          <p className="text-xl font-bold">{post.day}</p>
+          <p className="text-xs sm:text-sm bg-green-600 text-white px-2 py-1 rounded-b-md">
+            {post.monthYear}
+          </p>
+        </div>
+      </div>
+      <div className="p-4 sm:p-6">
+        <p className="text-gray-500 text-xs sm:text-sm mb-1 sm:mb-2">
+          {post.author} •{" "}
+          {new Date(post.date).toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
+        </p>
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+          {post.title}
+        </h3>
+        <a
+          href={`/blogs/${post.slug}`}
+          className="mt-3 inline-block text-green-600 font-semibold hover:underline transition duration-200 text-sm sm:text-base"
+        >
+          CONTINUE READING →
+        </a>
+      </div>
+    </div>
+  );
+
+  return (
+    <section className="pb-20 -mt-28 sm:pb-0 text-center px-4 sm:px-8 max-w-screen-xl mx-auto">
+      <h3 className="text-green-500 text-lg mt-10">Latest News</h3>
+      <h2 className="text-2xl sm:text-3xl font-bold mt-2">
+        Check out our blog posts
+      </h2>
+
+      {/* Grid untuk tablet dan desktop */}
+      <div className="hidden sm:grid mt-8 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+        {blogPosts.map((post, index) => renderCard(post, index))}
+      </div>
+
+      {/* Carousel untuk mobile */}
+      <div className="sm:hidden mt-8 relative">
+        <Swiper
+          modules={[Pagination, Navigation]}
+          spaceBetween={16}
+          slidesPerView={1.1}
+          centeredSlides={true}
+          loop={true}
+          pagination={{
+            clickable: true,
+            el: ".custom-pagination",
+          }}
+          navigation={{
+            prevEl: ".custom-prev",
+            nextEl: ".custom-next",
+          }}
+          className="pb-10"
+        >
+          {blogPosts.map((post, index) => (
+            <SwiperSlide key={index}>{renderCard(post, index)}</SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* Dot Pagination */}
+        <div className="custom-pagination absolute left-0 right-0 bottom-0 flex justify-center gap-2 mt-4 z-10" />
+
+        {/* Prev & Next Buttons */}
+        <button className="custom-prev absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow">
+          <ArrowLeft className="w-5 h-5 text-black" />
+        </button>
+        <button className="custom-next absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow">
+          <ArrowRight className="w-5 h-5 text-black" />
+        </button>
+      </div>
+
+      {/* Tombol Lihat Semua */}
+      <Link href="/blogs">
+        <button className="mt-8 mb-4 sm:mt-16 px-5 py-3 bg-[#5ECDCF] text-black text-base sm:text-lg font-semibold rounded-lg hover:bg-[#5ECDCF] hover:text-white hover:cursor-pointer transition">
+          See More
+        </button>
+      </Link>
+    </section>
+  );
+};
+
+export default BlogSectionHome;
+
+"use client";
+
+import Image from "next/image";
+import { FaPaperPlane } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination } from "swiper/modules";
+
+const ContactSectionHome = () => {
+  return (
+    <section className="bg-green-500 text-white relative rounded-lg ">
+      <Swiper
+        modules={[Pagination]}
+        pagination={{ clickable: true }}
+        spaceBetween={20}
+        slidesPerView={1}
+        className="md:flex md:space-x-6 md:space-y-0"
+        breakpoints={{
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 40,
+          },
+        }}
+      >
+        {/* Form Section */}
+        <SwiperSlide>
+          <div className="bg-gray-100 p-6 sm:p-10 flex items-center justify-center relative rounded-t-lg md:rounded-l-lg md:rounded-tr-none">
+            <div className="max-w-md w-full bg-white p-6 sm:p-8 rounded-lg shadow-lg z-10">
+              <h3 className="text-green-600 text-lg font-semibold">Have Questions?</h3>
+              <h2 className="text-2xl sm:text-3xl font-bold mt-2 text-black">Send us a message</h2>
+              <form className="mt-6 space-y-4 text-black">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <input
+                    type="email"
+                    placeholder="Email*"
+                    className="w-full sm:w-1/2 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Phone"
+                    className="w-full sm:w-1/2 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  />
+                </div>
+                <textarea
+                  placeholder="Tell Us About Project *"
+                  className="w-full px-4 py-3 border rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-green-500"
+                ></textarea>
+                <button
+                  type="submit"
+                  className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-yellow-600 transition"
+                >
+                  <FaPaperPlane />
+                  Get In Touch
+                </button>
+              </form>
+            </div>
+
+            {/* Gambar Petani - sembunyikan di mobile */}
+            <div className="absolute left-[-10px] bottom-0 hidden md:block">
+              <Image
+                src="/petani.png"
+                alt="Farmer Illustration"
+                width={200}
+                height={200}
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </SwiperSlide>
+
+        {/* Contact Information */}
+        <SwiperSlide>
+          <div className="p-6 sm:p-10 flex flex-col justify-center relative rounded-b-lg md:rounded-r-lg md:rounded-bl-none">
+            <h2 className="text-2xl sm:text-3xl font-bold relative inline-block pb-5 text-white">
+              Contact Information
+              <span className="absolute bottom-0 left-0 h-1 w-full bg-yellow-500"></span>
+            </h2>
+            <p className="mt-4 text-base sm:text-lg">
+              Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.
+            </p>
+            <div className="mt-6 space-y-4 text-white">
+              <div>
+                <h3 className="font-bold text-lg">Hotline</h3>
+                <p>+4733378901</p>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">Our Location</h3>
+                <p>55 Main Street, The Grand Avenue 2nd Block, New York City</p>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">Official Email</h3>
+                <p>info@agrul.com</p>
+              </div>
+            </div>
+
+            {/* Gambar Padi - sembunyikan di mobile */}
+            <div className="absolute right-[-50px] -bottom-32 hidden md:block">
+              <Image
+                src="/padi.png"
+                alt="Rice Plant Illustration"
+                width={200}
+                height={200}
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    </section>
+  );
+};
+
+export default ContactSectionHome;
+
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  FaTwitter,
+  FaFacebookF,
+  FaPinterest,
+  FaInstagram,
+  FaPaperPlane,
+} from "react-icons/fa";
+import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
+import contentfulClient from "@/contentful/contentfulClient";
+import { Entry } from "contentful";
+import Image from "next/image";
+
+interface BlogPost {
+  title: string;
+  date: string;
+  slug: string;
+}
+
+export default function Footer() {
+  const [articles, setArticles] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await contentfulClient.getEntries({
+          content_type: "blogKebunTaniku",
+          order: ["-fields.date"],
+        });
+
+        const posts = response.items.map((item) => {
+          const blogItem = item as Entry<any>;
+
+          const rawTitle = blogItem.fields.title;
+          const rawSlug = blogItem.fields.slug;
+          const rawDate = blogItem.fields.date;
+
+          const title = typeof rawTitle === "string" ? rawTitle : String(rawTitle ?? "");
+          const slug = typeof rawSlug === "string" ? rawSlug : String(rawSlug ?? "");
+          const date =
+            typeof rawDate === "string" || typeof rawDate === "number"
+              ? new Date(rawDate)
+              : new Date();
+
+          return {
+            title,
+            date: date.toISOString(),
+            slug,
+          };
+        });
+
+        setArticles(posts.slice(0, 2)); // Ambil hanya 2 artikel terbaru
+      } catch (error) {
+        console.error("Error fetching data from Contentful:", error);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  return (
+    <footer className="bg-[#161611] text-white py-12 px-6 sm:px-8 md:px-16 lg:px-32">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* Logo & Description */}
+        <div>
+          <Image
+            src="/logo.png"
+            alt="Agriculture Logo"
+            width={500}
+            height={96}
+            className="h-20 sm:h-24 mb-4 object-contain"
+          />
+          <p className="text-gray-400 text-justify text-sm sm:text-base leading-relaxed">
+            Kebun Taniku adalah platform yang menghubungkan petani dan
+            masyarakat di Kota Bandung untuk mendistribusikan sayuran dan buah
+            organik segar, mendukung petani, dan mendorong gaya hidup sehat.
+            Didirikan oleh lima pemuda lokal.
+          </p>
+          <div className="flex space-x-3 mt-4">
+            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+              <FaTwitter size={16} />
+            </a>
+            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+              <FaFacebookF size={16} />
+            </a>
+            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+              <FaPinterest size={16} />
+            </a>
+            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+              <FaInstagram size={16} />
+            </a>
+          </div>
+        </div>
+
+        {/* Explore Section */}
+        <div>
+          <h3 className="text-lg font-semibold">Explore</h3>
+          <div className="w-10 h-1 bg-[#5ECDCF] my-2"></div>
+          <ul className="text-gray-400 space-y-2 text-sm sm:text-base">
+            <li>About</li>
+            <li>Services</li>
+            <li>Products</li>
+            <li>Blogs</li>
+            <li>Contact</li>
+          </ul>
+        </div>
+
+        {/* News Section */}
+        <div>
+          <h3 className="text-lg font-semibold">Articles</h3>
+          <div className="w-10 h-1 bg-[#5ECDCF] my-2"></div>
+          <div className="text-gray-400 space-y-4 text-sm sm:text-base">
+            {articles.map((article, index) => (
+              <div key={index}>
+                <h4 className="font-semibold text-white truncate">{article.title}</h4>
+                <p className="text-yellow-500 text-xs sm:text-sm">
+                  {new Date(article.date).toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Contact Section */}
+        <div>
+          <h3 className="text-lg font-semibold">Contact</h3>
+          <div className="w-10 h-1 bg-[#5ECDCF] my-2"></div>
+          <div className="text-gray-400 space-y-2 text-sm sm:text-base">
+            <p className="flex items-center space-x-2">
+              <FiPhone className="text-[#5ECDCF]" />
+              <span>+62 859 5181 6788</span>
+            </p>
+            <p className="flex items-center space-x-2">
+              <FiMail className="text-[#5ECDCF]" />
+              <span>kebuntaniku@gmail.com</span>
+            </p>
+            <p className="flex items-center space-x-2">
+              <FiMapPin className="text-[#5ECDCF]" />
+              <span>Antapani, Bandung</span>
+            </p>
+          </div>
+          <div className="flex mt-4">
+            <input
+              type="email"
+              placeholder="Your Email Address"
+              className="p-2 rounded-l-lg bg-gray-800 text-white w-full text-sm focus:outline-none"
+            />
+            <button className="bg-[#5ECDCF] p-2 rounded-r-lg flex items-center justify-center">
+              <a href="#">
+                <FaPaperPlane size={16} />
+              </a>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Bottom */}
+      <div className="mt-8 text-center text-gray-500 border-t border-gray-700 pt-4 text-xs sm:text-sm">
+        <p>© All Copyright 2025 by Kebun Taniku</p>
+        <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
+          <a href="#" className="hover:text-white">
+            Terms of Use
+          </a>
+          <span>|</span>
+          <a href="#" className="hover:text-white">
+            Privacy Policy
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+"use client";
+
+import { useState, useEffect } from "react";
+import { FaArrowUp } from "react-icons/fa";
+
+const ScrollToTopButton: React.FC = () => {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener("scroll", toggleVisibility);
+    return () => window.removeEventListener("scroll", toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <button
+      onClick={scrollToTop}
+      className={`fixed bottom-8 right-8 bg-[#5ECDCF] text-white p-4 rounded-full shadow-md transition-opacity duration-300 cursor-pointer ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <FaArrowUp size={20} />
+    </button>
+  );
+};
+
+export default ScrollToTopButton;

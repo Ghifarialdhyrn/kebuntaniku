@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import {
   FaTwitter,
   FaFacebookF,
@@ -9,8 +6,6 @@ import {
   FaPaperPlane,
 } from "react-icons/fa";
 import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
-import contentfulClient from "@/contentful/contentfulClient";
-import { Entry } from "contentful";
 import Image from "next/image";
 
 interface BlogPost {
@@ -19,50 +14,14 @@ interface BlogPost {
   slug: string;
 }
 
-export default function Footer() {
-  const [articles, setArticles] = useState<BlogPost[]>([]);
+interface FooterProps {
+  articles: BlogPost[];
+}
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await contentfulClient.getEntries({
-          content_type: "blogKebunTaniku",
-          order: ["-fields.date"],
-        });
-
-        const posts = response.items.map((item) => {
-          const blogItem = item as Entry<any>;
-
-          const rawTitle = blogItem.fields.title;
-          const rawSlug = blogItem.fields.slug;
-          const rawDate = blogItem.fields.date;
-
-          const title = typeof rawTitle === "string" ? rawTitle : String(rawTitle ?? "");
-          const slug = typeof rawSlug === "string" ? rawSlug : String(rawSlug ?? "");
-          const date =
-            typeof rawDate === "string" || typeof rawDate === "number"
-              ? new Date(rawDate)
-              : new Date();
-
-          return {
-            title,
-            date: date.toISOString(),
-            slug,
-          };
-        });
-
-        setArticles(posts.slice(0, 2)); // Ambil hanya 2 artikel terbaru
-      } catch (error) {
-        console.error("Error fetching data from Contentful:", error);
-      }
-    };
-
-    fetchArticles();
-  }, []);
-
+export default function Footer({ articles }: FooterProps) {
   return (
     <footer className="bg-[#161611] text-white py-12 px-6 sm:px-8 md:px-16 lg:px-32">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 justify-between gap-8">
         {/* Logo & Description */}
         <div>
           <Image
@@ -79,23 +38,35 @@ export default function Footer() {
             Didirikan oleh lima pemuda lokal.
           </p>
           <div className="flex space-x-3 mt-4">
-            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+            <a
+              href="#"
+              className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition"
+            >
               <FaTwitter size={16} />
             </a>
-            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+            <a
+              href="#"
+              className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition"
+            >
               <FaFacebookF size={16} />
             </a>
-            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+            <a
+              href="#"
+              className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition"
+            >
               <FaPinterest size={16} />
             </a>
-            <a href="#" className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition">
+            <a
+              href="#"
+              className="p-2 bg-black rounded-full hover:bg-[#5ECDCF] transition"
+            >
               <FaInstagram size={16} />
             </a>
           </div>
         </div>
 
         {/* Explore Section */}
-        <div>
+        <div className="pl-20">
           <h3 className="text-lg font-semibold">Explore</h3>
           <div className="w-10 h-1 bg-[#5ECDCF] my-2"></div>
           <ul className="text-gray-400 space-y-2 text-sm sm:text-base">
@@ -107,14 +78,16 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* News Section */}
-        <div>
+        {/* Articles */}
+        <div className="pr-10">
           <h3 className="text-lg font-semibold">Articles</h3>
           <div className="w-10 h-1 bg-[#5ECDCF] my-2"></div>
           <div className="text-gray-400 space-y-4 text-sm sm:text-base">
             {articles.map((article, index) => (
               <div key={index}>
-                <h4 className="font-semibold text-white truncate">{article.title}</h4>
+                <h4 className="font-semibold text-white truncate">
+                  {article.title}
+                </h4>
                 <p className="text-yellow-500 text-xs sm:text-sm">
                   {new Date(article.date).toLocaleDateString("id-ID", {
                     day: "2-digit",

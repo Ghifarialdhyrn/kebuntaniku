@@ -1,6 +1,5 @@
-"use client";
-
-import { useInView } from "@/components/hooks/useInView";
+import { headers } from "next/headers";
+import { createClient } from "contentful";
 import BannerAbout from "@/components/about/banner.about";
 import Descriptions from "@/components/about/description.about";
 import HeroAbout from "@/components/about/hero.about";
@@ -11,67 +10,68 @@ import Footer from "@/ui/footer";
 import Navbar from "@/ui/navbar";
 import ScrollToTopButton from "@/ui/scrollup";
 
-export default function About() {
-  const heroInView = useInView<HTMLDivElement>();
-  const descriptionsInView = useInView<HTMLDivElement>();
-  const bannerInView = useInView<HTMLDivElement>();
-  const testimonialInView = useInView<HTMLDivElement>();
-  const teamInView = useInView<HTMLDivElement>();
-  const locationInView = useInView<HTMLDivElement>();
+interface AboutPageProps {
+  searchParams?: { page?: string };
+}
+
+export default async function About({ searchParams }: AboutPageProps) {
+  const pathname = "/about";
+  const page = Number(searchParams?.page) || 1;
+
+  let recentArticles: { title: string; date: string; slug: string }[] = [];
+
+  try {
+    const client = createClient({
+      space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
+      accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
+    });
+
+    const blogRes = await client.getEntries({
+      content_type: "blogKebunTaniku",
+      order: ["-fields.date"],
+    });
+
+    recentArticles = blogRes.items.slice(0, 2).map((item: any) => ({
+      title: item.fields.title || "",
+      slug: item.fields.slug || "",
+      date: new Date(item.fields.date).toISOString(),
+    }));
+  } catch (error) {
+    console.error("SSR fetch error (Footer):", error);
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar pathname={pathname} />
 
-      <div
-        ref={heroInView.ref}
-        className={`flex flex-grow justify-center items-center pb-12 sm:pb-16 transition-opacity duration-500 ease-in-out
-          ${heroInView.isInView ? "opacity-100" : "opacity-0"}`}
-      >
+      <div className="flex flex-grow justify-center items-center pb-12 sm:pb-16">
         <HeroAbout />
       </div>
 
-      <div
-        ref={descriptionsInView.ref}
-        className={`flex flex-grow justify-center items-center py-12 sm:py-16 px-4 transition-opacity duration-500 ease-in-out
-          ${descriptionsInView.isInView ? "opacity-100" : "opacity-0"}`}
-      >
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <Descriptions />
       </div>
 
-      <div
-        ref={bannerInView.ref}
-        className={`flex flex-grow justify-center items-center py-12 sm:py-16 px-4 transition-opacity duration-500 ease-in-out
-          ${bannerInView.isInView ? "opacity-100" : "opacity-0"}`}
-      >
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <BannerAbout />
       </div>
 
       <div
-        ref={testimonialInView.ref}
-        className={`flex flex-grow justify-center items-center py-12 sm:py-16 px-4 transition-opacity duration-500 ease-in-out
-          ${testimonialInView.isInView ? "opacity-100" : "opacity-0"}`}
+        id="testimonials"
+        className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4"
       >
-        <TestimonialAbout />
+        <TestimonialAbout page={page} perPage={3} />
       </div>
 
-      <div
-        ref={teamInView.ref}
-        className={`flex flex-grow justify-center items-center py-12 sm:py-16 px-4 transition-opacity duration-500 ease-in-out
-          ${teamInView.isInView ? "opacity-100" : "opacity-0"}`}
-      >
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <TeamMembers />
       </div>
 
-      <div
-        ref={locationInView.ref}
-        className={`bg-[#f8f5f0] w-full flex flex-grow justify-center items-center py-12 sm:py-16 px-4 transition-opacity duration-500 ease-in-out
-          ${locationInView.isInView ? "opacity-100" : "opacity-0"}`}
-      >
+      <div className="bg-[#f8f5f0] w-full flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
         <LocationAbout />
       </div>
 
-      <Footer />
+      <Footer articles={recentArticles} />
       <ScrollToTopButton />
     </div>
   );

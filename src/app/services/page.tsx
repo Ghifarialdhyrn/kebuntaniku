@@ -6,12 +6,42 @@ import ServicesCards from "@/components/services/list.services";
 import Footer from "@/ui/footer";
 import Navbar from "@/ui/navbar";
 import ScrollToTopButton from "@/ui/scrollup";
+import { createClient } from "contentful";
 import Image from "next/image";
 
-export default function Services() {
+interface ServicesPageProps {
+  searchParams?: { page?: string };
+}
+
+export default async function Services({ searchParams }: ServicesPageProps) {
+  const pathname = "/services";
+  const page = Number(searchParams?.page) || 1;
+
+  let recentArticles: { title: string; date: string; slug: string }[] = [];
+
+  try {
+    const client = createClient({
+      space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
+      accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
+    });
+
+    const blogRes = await client.getEntries({
+      content_type: "blogKebunTaniku",
+      order: ["-fields.date"],
+    });
+
+    recentArticles = blogRes.items.slice(0, 2).map((item: any) => ({
+      title: item.fields.title || "",
+      slug: item.fields.slug || "",
+      date: new Date(item.fields.date).toISOString(),
+    }));
+  } catch (error) {
+    console.error("SSR fetch error (Footer):", error);
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar pathname={pathname} />
 
       <div className="flex flex-grow justify-center items-center mb-10 md:mb-20">
         <HeroServices />
@@ -44,7 +74,7 @@ export default function Services() {
           </div>
 
           {/* Background Image */}
-          <div className="absolute bottom-0 right-0 opacity-50 w-2/3 md:w-auto">
+          <div className="absolute bottom-0 right-0 opacity-100 w-2/3 md:w-auto">
             <img
               src="/service-06.png"
               alt="CTA Image"
@@ -56,7 +86,7 @@ export default function Services() {
         </div>
       </div>
 
-      <Footer />
+      <Footer articles={recentArticles} />
       <ScrollToTopButton />
     </div>
   );

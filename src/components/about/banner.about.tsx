@@ -1,11 +1,11 @@
-'use client';
-
-import React from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
-import "swiper/css";
-
 const BannerAbout = () => {
+  const stats = [
+    "Agriculture Products",
+    "Projects Completed",
+    "Satisfied Clients",
+    "Experts Farmers",
+  ];
+
   return (
     <div
       className="relative w-full h-[600px] bg-cover bg-center"
@@ -21,44 +21,19 @@ const BannerAbout = () => {
         </h1>
       </div>
 
-      {/* Footer Stats with Carousel */}
+      {/* Stats Grid Only */}
       <div className="absolute bottom-0 w-full py-8 bg-black bg-opacity-90 text-white">
         <div className="container mx-auto relative text-gray-400 px-4">
-          {/* Sayura Image */}
-          <div className="hidden md:block absolute -left-10 bottom-0">
-            <img
-              src="/sayura.png"
-              alt="Sayura"
-              width={300}
-              height={100}
-              className="w-[200px] md:w-[300px] h-auto"
-            />
-          </div>
-
-          {/* Swiper Carousel */}
-          <Swiper
-            modules={[Autoplay]} // ✅ tambahkan modul autoplay (opsional)
-            autoplay={{ delay: 2500, disableOnInteraction: false }} // ✅ opsional
-            spaceBetween={20}
-            slidesPerView={1}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-            }}
-            className="text-center"
-          >
-            {[
-              "Agriculture Products",
-              "Projects Completed",
-              "Satisfied Clients",
-              "Experts Farmers",
-            ].map((item, idx) => (
-              <SwiperSlide key={idx}>
-                <h2 className="text-base sm:text-lg">{item}</h2>
-              </SwiperSlide>
+          <div className="flex flex-wrap justify-center items-center gap-x-40">
+            {stats.map((item, idx) => (
+              <div
+                key={idx}
+                className="min-w-[150px] text-base sm:text-lg text-center"
+              >
+                <h2>{item}</h2>
+              </div>
             ))}
-          </Swiper>
+          </div>
         </div>
       </div>
     </div>
