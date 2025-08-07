@@ -1,4 +1,7 @@
+"use client"; // Tambahkan ini untuk pastikan CSR
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   FaTwitter,
   FaFacebookF,
@@ -19,12 +22,12 @@ const isActive = (pathname: string, path: string) => {
   return pathname === path;
 };
 
-export default function Navbar({ pathname }: { pathname: string }) {
+export default function NavbarCSR() {
+  const pathname = usePathname();
+
   return (
     <div className="w-full z-[1000]">
-      {/* Desktop */}
       <div className="hidden sm:flex flex-col fixed top-0 left-0 w-full bg-white shadow-md">
-        {/* Top Bar */}
         <div className="flex justify-between items-center py-3 px-10 text-sm text-gray-600">
           <div className="flex items-center space-x-8">
             <a href="/">
@@ -53,11 +56,7 @@ export default function Navbar({ pathname }: { pathname: string }) {
           </div>
         </div>
 
-        {/* Nav Bar */}
-        <nav
-          className="flex justify-center bg-[url('/bgnav.png')] bg-center bg-cover py-4 px-10"
-          aria-label="Primary Navigation"
-        >
+        <nav className="flex justify-center bg-[url('/bgnav.png')] bg-center bg-cover py-4 px-10">
           <ul className="flex space-x-14 text-gray-600 font-semibold max-w-screen-xl w-full justify-center items-center">
             {navLinks.map(({ name, path }) => (
               <li key={path}>

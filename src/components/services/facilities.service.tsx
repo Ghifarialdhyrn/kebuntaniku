@@ -29,15 +29,11 @@ export default function FacilitiesService() {
               <div className="p-4 text-center font-semibold text-lg text-green-700">
                 {item.title}
               </div>
-              <div className="relative h-48 w-full">
-                <Image
+              <div className="relative h-48 w-full overflow-hidden">
+                <img
                   src={item.image}
                   alt={item.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-300 hover:scale-105"
-                  placeholder="blur"
-                  blurDataURL="/placeholder-blur.png"
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
             </div>
@@ -62,8 +58,6 @@ export default function FacilitiesService() {
                 layout="fill"
                 objectFit="cover"
                 className="transition-transform duration-300 hover:scale-105"
-                placeholder="blur"
-                blurDataURL="/placeholder-blur.png"
               />
             </div>
           </div>

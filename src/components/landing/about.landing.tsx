@@ -33,7 +33,7 @@ export default function AboutHome() {
             sehat, dan berkualitas tinggi.
           </p>
           <a href="/about">
-            <button className="px-5 py-3 bg-[#5ECDCF] text-black text-base font-semibold rounded-lg hover:bg-[#54b8ba] hover:text-white transition">
+            <button className="px-5 py-3 bg-[#5ECDCF] text-black cursor-pointer text-base font-semibold rounded-lg hover:bg-[#54b8ba] hover:text-white transition">
               Read More
             </button>
           </a>

@@ -70,7 +70,7 @@ export default function ProductsHome({ products }: { products: any[] }) {
       {/* Button */}
       <div className="text-center mt-10">
         <Link href="/products">
-          <button className="px-6 py-3 bg-[#5ECDCF] text-black text-base font-semibold rounded-lg hover:bg-[#50b8b9] hover:text-white transition">
+          <button className="px-6 py-3 bg-[#5ECDCF] text-black cursor-pointer text-base font-semibold rounded-lg hover:bg-[#50b8b9] hover:text-white transition">
             See More
           </button>
         </Link>

@@ -9,14 +9,7 @@ import ScrollToTopButton from "@/ui/scrollup";
 import { createClient } from "contentful";
 import Image from "next/image";
 
-interface ServicesPageProps {
-  searchParams?: { page?: string };
-}
-
-export default async function Services({ searchParams }: ServicesPageProps) {
-  const pathname = "/services";
-  const page = Number(searchParams?.page) || 1;
-
+export default async function Services() {
   let recentArticles: { title: string; date: string; slug: string }[] = [];
 
   try {
@@ -41,7 +34,7 @@ export default async function Services({ searchParams }: ServicesPageProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar pathname={pathname} />
+      <Navbar />
 
       <div className="flex flex-grow justify-center items-center mb-10 md:mb-20">
         <HeroServices />

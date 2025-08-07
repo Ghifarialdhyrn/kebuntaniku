@@ -9,17 +9,7 @@ import Footer from "@/ui/footer";
 import Navbar from "@/ui/navbar";
 import ScrollToTopButton from "@/ui/scrollup";
 
-export default async function About({
-  searchParams,
-}: {
-  searchParams?: Record<string, string | string[]>;
-}) {
-  const pathname = "/about";
-
-  // Ambil query param ?page= dan pastikan nilainya adalah string tunggal
-  const pageParam = searchParams?.page;
-  const page = Number(Array.isArray(pageParam) ? pageParam[0] : pageParam) || 1;
-
+export default async function About() {
   let recentArticles: { title: string; date: string; slug: string }[] = [];
 
   try {
@@ -44,7 +34,7 @@ export default async function About({
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar pathname={pathname} />
+      <Navbar />
 
       <div className="flex flex-grow justify-center items-center pb-12 sm:pb-16">
         <HeroAbout />

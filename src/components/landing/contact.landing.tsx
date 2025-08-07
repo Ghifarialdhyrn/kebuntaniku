@@ -82,20 +82,20 @@ const ContactSectionHome = () => {
               <span className="absolute bottom-0 left-0 h-1 w-full bg-yellow-500"></span>
             </h2>
             <p className="mt-4 text-base sm:text-lg">
-              Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.
+              Jika ada yang ingin ditanyakan dan info lebih lanjut dari Kebun Taniku bisa hubungi nomor dibawah ini! 
             </p>
             <div className="mt-6 space-y-4 text-white">
               <div>
-                <h3 className="font-bold text-lg">Hotline</h3>
-                <p>+4733378901</p>
+                <h3 className="font-bold text-lg">No Telp</h3>
+                <p>085951816788</p>
               </div>
               <div>
                 <h3 className="font-bold text-lg">Our Location</h3>
-                <p>55 Main Street, The Grand Avenue 2nd Block, New York City</p>
+                <p>Kalijati, Antapani, Bandung City</p>
               </div>
               <div>
                 <h3 className="font-bold text-lg">Official Email</h3>
-                <p>info@agrul.com</p>
+                <p>kebuntaniku@gmail.com</p>
               </div>
             </div>
 
