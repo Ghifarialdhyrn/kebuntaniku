@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { createClient } from "contentful";
 import BannerAbout from "@/components/about/banner.about";
 import Descriptions from "@/components/about/description.about";
@@ -10,13 +9,16 @@ import Footer from "@/ui/footer";
 import Navbar from "@/ui/navbar";
 import ScrollToTopButton from "@/ui/scrollup";
 
-interface AboutPageProps {
-  searchParams?: { page?: string };
-}
-
-export default async function About({ searchParams }: AboutPageProps) {
+export default async function About({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[]>;
+}) {
   const pathname = "/about";
-  const page = Number(searchParams?.page) || 1;
+
+  // Ambil query param ?page= dan pastikan nilainya adalah string tunggal
+  const pageParam = searchParams?.page;
+  const page = Number(Array.isArray(pageParam) ? pageParam[0] : pageParam) || 1;
 
   let recentArticles: { title: string; date: string; slug: string }[] = [];
 
@@ -56,11 +58,8 @@ export default async function About({ searchParams }: AboutPageProps) {
         <BannerAbout />
       </div>
 
-      <div
-        id="testimonials"
-        className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4"
-      >
-        <TestimonialAbout page={page} perPage={3} />
+      <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
+        <TestimonialAbout />
       </div>
 
       <div className="flex flex-grow justify-center items-center py-12 sm:py-16 px-4">
