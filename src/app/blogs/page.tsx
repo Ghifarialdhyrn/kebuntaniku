@@ -6,17 +6,15 @@ import NavbarSSR from "@/ui/navbar";
 import { createClient, Asset, Entry } from "contentful";
 import { TypeBlogKebunTanikuSkeleton } from "@/contentful/types/blogKebunTaniku.type";
 
-type BlogsPageProps = {
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
+// ❌ HAPUS type BlogsPageProps, biarkan Next yang handle PageProps
 
-export default async function BlogsPage({ searchParams }: BlogsPageProps) {
+export default async function BlogsPage({ searchParams }: any) {
   const client = createClient({
     space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
     accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
   });
 
-  // Ambil query params
+  // Ambil query params (search, filter, sort, page)
   const search =
     typeof searchParams?.search === "string" ? searchParams.search : "";
   const filter =
@@ -24,7 +22,9 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
   const sort =
     typeof searchParams?.sort === "string" ? searchParams.sort : "name";
   const pageParam =
-    typeof searchParams?.page === "string" ? parseInt(searchParams.page, 10) : 1;
+    typeof searchParams?.page === "string"
+      ? parseInt(searchParams.page, 10)
+      : 1;
 
   const ITEMS_PER_PAGE = 6;
 
@@ -100,7 +100,7 @@ export default async function BlogsPage({ searchParams }: BlogsPageProps) {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginated = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // Recent articles untuk footer (ambil dari allPosts, atau kalau mau bisa dari filtered)
+  // Recent articles untuk footer (ambil dari allPosts)
   const recentArticles = allPosts.slice(0, 2).map((p) => ({
     title: p.title,
     slug: p.slug,
