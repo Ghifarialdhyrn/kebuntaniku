@@ -1,7 +1,4 @@
-"use client"; // Tambahkan ini untuk pastikan CSR
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   FaTwitter,
   FaFacebookF,
@@ -17,17 +14,23 @@ const navLinks = [
   { name: "Blogs", path: "/blogs" },
 ];
 
-const isActive = (pathname: string, path: string) => {
+// Logic active menu
+function isActive(pathname: string, path: string) {
   if (path === "/blogs") return pathname.startsWith("/blogs");
   return pathname === path;
+}
+
+type NavbarProps = {
+  currentPath: string;
 };
 
-export default function NavbarCSR() {
-  const pathname = usePathname();
+export default function NavbarSSR({ currentPath }: NavbarProps) {
+  const pathname = currentPath;
 
   return (
     <div className="w-full z-[1000]">
       <div className="hidden sm:flex flex-col fixed top-0 left-0 w-full bg-white shadow-md">
+        {/* TOP BAR */}
         <div className="flex justify-between items-center py-3 px-10 text-sm text-gray-600">
           <div className="flex items-center space-x-8">
             <a href="/">
@@ -40,6 +43,7 @@ export default function NavbarCSR() {
               <FaInstagram className="hover:text-gray-700 cursor-pointer" />
             </div>
           </div>
+
           <div className="flex space-x-14">
             <div>
               <p>Call anytime</p>
@@ -56,6 +60,7 @@ export default function NavbarCSR() {
           </div>
         </div>
 
+        {/* NAV MENU */}
         <nav className="flex justify-center bg-[url('/bgnav.png')] bg-center bg-cover py-4 px-10">
           <ul className="flex space-x-14 text-gray-600 font-semibold max-w-screen-xl w-full justify-center items-center">
             {navLinks.map(({ name, path }) => (

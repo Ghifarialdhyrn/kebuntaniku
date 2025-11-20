@@ -1,86 +1,65 @@
-"use client";
+import Link from "next/link";
 
-import { useState, useEffect } from "react";
-import { createClient } from "contentful";
-import Loader from "../global/Loader";
+type ListProductsProps = {
+  products: any[];
+  search: string;
+  category: string;
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+};
 
-// Membuat client Contentful
-const contentfulClient = createClient({
-  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
-  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
-});
+function buildQuery({
+  page,
+  search,
+  category,
+}: {
+  page: number;
+  search: string;
+  category: string;
+}) {
+  const params = new URLSearchParams();
+  if (search) params.set("search", search);
+  if (category) params.set("category", category);
+  params.set("page", String(page));
+  return `?${params.toString()}`;
+}
 
-const ListProducts = () => {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [page, setPage] = useState(1);
-  const [products, setProducts] = useState<any[]>([]);
-  const [itemsPerPage, setItemsPerPage] = useState(8); // Responsif
-  const [loading, setLoading] = useState(true); // state loading
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerPage(2); // max 2 item di mobile (Tailwind breakpoint < sm)
-      } else {
-        setItemsPerPage(8); // default desktop
-      }
-    };
-
-    handleResize(); // set awal
-    window.addEventListener("resize", handleResize); // update saat resize
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true); // mulai loading
-      try {
-        const response = await contentfulClient.getEntries({
-          content_type: "productsKebunTaniku",
-        });
-        setProducts(response.items);
-      } catch (error) {
-        console.error("Error fetching data from Contentful:", error);
-      } finally {
-        setLoading(false); // selesai loading
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  const filteredProducts = products
-    .filter((product) =>
-      product.fields.productName.toLowerCase().includes(search.toLowerCase())
-    )
-    .filter((product) =>
-      category ? product.fields.categories.includes(category) : true
-    );
-
-  const paginatedProducts = filteredProducts.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+const ListProducts = ({
+  products,
+  search,
+  category,
+  page,
+  totalPages,
+  totalItems,
+  itemsPerPage,
+}: ListProductsProps) => {
+  const hasPrev = page > 1;
+  const hasNext = page < totalPages;
 
   return (
     <div className="bg-[#E9F1EE] w-full min-h-screen py-10 px-4 sm:px-10 lg:px-20">
       <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-8">
         Featured Products
       </h2>
-      <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
+
+      {/* Form GET untuk search & filter */}
+      <form
+        method="GET"
+        className="flex flex-col sm:flex-row justify-center gap-4 mb-6"
+      >
         <input
           type="text"
+          name="search"
           placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          defaultValue={search}
           className="p-3 w-full sm:w-64 bg-white border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500"
         />
         <select
-          onChange={(e) => setCategory(e.target.value)}
+          name="category"
+          defaultValue={category}
           className="p-3 w-full sm:w-64 bg-white border rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-green-500"
-          value={category}
         >
           <option value="">All Categories</option>
           <option value="Sayuran Daun">Sayuran Daun</option>
@@ -90,20 +69,28 @@ const ListProducts = () => {
           <option value="Umbi">Umbi</option>
           <option value="Sayuran Buah">Sayuran Buah</option>
         </select>
-      </div>
 
-      {/* Loader tampil jika loading */}
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Render skeleton card sesuai jumlah itemsPerPage */}
-          {[...Array(itemsPerPage)].map((_, i) => (
-            <Loader key={i} type="card" />
-          ))}
-        </div>
+        {/* Supaya kalau ganti search/category, page balik ke 1 */}
+        <input type="hidden" name="page" value="1" />
+
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition w-full sm:w-auto"
+        >
+          Apply
+        </button>
+      </form>
+
+      {/* Kalau tidak ada produk */}
+      {totalItems === 0 ? (
+        <p className="text-center text-gray-600 mt-8">
+          No products found.
+        </p>
       ) : (
         <>
+          {/* Grid produk */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {paginatedProducts.map((product) => (
+            {products.map((product) => (
               <div
                 key={product.sys.id}
                 className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:scale-105"
@@ -121,6 +108,7 @@ const ListProducts = () => {
                   <p className="text-gray-500 text-sm sm:text-base">
                     {product.fields.categories}
                   </p>
+
                   <div className="flex items-baseline justify-center gap-2 mt-2">
                     <p className="text-green-600 font-bold text-base sm:text-lg">
                       {product.fields.price
@@ -130,53 +118,74 @@ const ListProducts = () => {
                         : "Rp 0"}
                     </p>
                   </div>
+
                   <div className="flex items-baseline justify-center gap-2 mt-2">
                     <p className="text-gray-500 font-bold text-sm sm:text-base">
-                      {product.fields.soldItems
-                        ? product.fields.soldItems
-                        : "0"}{" "}
-                      Sold
+                      {product.fields.soldItems ?? "0"} Sold
                     </p>
                   </div>
                 </div>
               </div>
             ))}
 
-            {/* Placeholder agar grid tetap rapi */}
-            {Array.from({ length: itemsPerPage - paginatedProducts.length }).map(
-              (_, index) => (
-                <div
-                  key={`placeholder-${index}`}
-                  className="bg-transparent rounded-xl"
-                />
-              )
-            )}
+            {/* Placeholder biar grid tetap rapi kalau item kurang dari itemsPerPage */}
+            {Array.from({
+              length: Math.max(0, itemsPerPage - products.length),
+            }).map((_, index) => (
+              <div
+                key={`placeholder-${index}`}
+                className="bg-transparent rounded-xl"
+              />
+            ))}
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-            <button
-              onClick={() => setPage(page - 1)}
-              disabled={page === 1}
-              className={`px-4 py-2 rounded-lg text-white transition w-full sm:w-auto ${
-                page === 1 ? "bg-gray-300" : "bg-green-500 hover:bg-green-600"
-              }`}
-            >
-              Previous
-            </button>
-            <span className="text-gray-600 font-semibold pt-1.5 text-center">
-              Page {page}
+          {/* Pagination */}
+          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 items-center">
+            {/* Previous */}
+            {hasPrev ? (
+              <Link
+                href={buildQuery({
+                  page: page - 1,
+                  search,
+                  category,
+                })}
+                className="px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600 transition w-full sm:w-auto text-center"
+              >
+                Previous
+              </Link>
+            ) : (
+              <button
+                disabled
+                className="px-4 py-2 rounded-lg text-white bg-gray-300 w-full sm:w-auto"
+              >
+                Previous
+              </button>
+            )}
+
+            <span className="text-gray-600 font-semibold text-center">
+              Page {page} of {totalPages}
             </span>
-            <button
-              onClick={() => setPage(page + 1)}
-              disabled={page * itemsPerPage >= filteredProducts.length}
-              className={`px-4 py-2 rounded-lg text-white transition w-full sm:w-auto ${
-                page * itemsPerPage >= filteredProducts.length
-                  ? "bg-gray-300"
-                  : "bg-green-500 hover:bg-green-600"
-              }`}
-            >
-              Next
-            </button>
+
+            {/* Next */}
+            {hasNext ? (
+              <Link
+                href={buildQuery({
+                  page: page + 1,
+                  search,
+                  category,
+                })}
+                className="px-4 py-2 rounded-lg text-white bg-green-500 hover:bg-green-600 transition w-full sm:w-auto text-center"
+              >
+                Next
+              </Link>
+            ) : (
+              <button
+                disabled
+                className="px-4 py-2 rounded-lg text-white bg-gray-300 w-full sm:w-auto"
+              >
+                Next
+              </button>
+            )}
           </div>
         </>
       )}

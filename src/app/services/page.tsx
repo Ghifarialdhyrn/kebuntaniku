@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "contentful";
+
 import ActivitiesService from "@/components/services/activities.service";
 import BannerServices from "@/components/services/banner.services";
 import FacilitiesService from "@/components/services/facilities.service";
@@ -6,35 +11,50 @@ import ServicesCards from "@/components/services/list.services";
 import Footer from "@/ui/footer";
 import Navbar from "@/ui/navbar";
 import ScrollToTopButton from "@/ui/scrollup";
-import { createClient } from "contentful";
-import Image from "next/image";
+import NavbarCSR from "@/ui/cards/navbar.csr";
 
-export default async function Services() {
-  let recentArticles: { title: string; date: string; slug: string }[] = [];
+type RecentArticle = {
+  title: string;
+  date: string;
+  slug: string;
+};
 
-  try {
+export default function Services() {
+  const [recentArticles, setRecentArticles] = useState<RecentArticle[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
     const client = createClient({
       space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
       accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
     });
 
-    const blogRes = await client.getEntries({
-      content_type: "blogKebunTaniku",
-      order: ["-fields.date"],
-    });
+    const fetchRecentArticles = async () => {
+      try {
+        const blogRes: any = await client.getEntries({
+          content_type: "blogKebunTaniku",
+          order: ["-fields.date"],
+        });
 
-    recentArticles = blogRes.items.slice(0, 2).map((item: any) => ({
-      title: item.fields.title || "",
-      slug: item.fields.slug || "",
-      date: new Date(item.fields.date).toISOString(),
-    }));
-  } catch (error) {
-    console.error("SSR fetch error (Footer):", error);
-  }
+        const mapped: RecentArticle[] = blogRes.items.slice(0, 2).map((item: any) => ({
+          title: item.fields.title || "",
+          slug: item.fields.slug || "",
+          date: new Date(item.fields.date).toISOString(),
+        }));
+
+        setRecentArticles(mapped);
+      } catch (err) {
+        console.error("CSR fetch error (Footer):", err);
+        setError("Gagal memuat artikel terbaru.");
+      }
+    };
+
+    fetchRecentArticles();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <NavbarCSR />
 
       <div className="flex flex-grow justify-center items-center mb-10 md:mb-20">
         <HeroServices />
@@ -78,6 +98,12 @@ export default async function Services() {
           </div>
         </div>
       </div>
+
+      {error && (
+        <p className="text-center text-red-500 text-sm mt-4">
+          {error}
+        </p>
+      )}
 
       <Footer articles={recentArticles} />
       <ScrollToTopButton />
