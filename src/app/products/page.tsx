@@ -11,8 +11,9 @@ type RecentArticle = {
   slug: string;
 };
 
+// ❗ Perbaiki tipe: searchParams sekarang Promise, mengikuti PageProps Next.js
 type ProductsPageProps = {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function Products({ searchParams }: ProductsPageProps) {
@@ -24,13 +25,19 @@ export default async function Products({ searchParams }: ProductsPageProps) {
   let recentArticles: RecentArticle[] = [];
   let products: any[] = [];
 
+  // ✅ Tunggu Promise searchParams, lalu jadikan object biasa
+  const sp =
+    (searchParams
+      ? await searchParams
+      : {}) as Record<string, string | string[] | undefined>;
+
   // Ambil query dari URL
   const search =
-    typeof searchParams?.search === "string" ? searchParams.search : "";
+    typeof sp.search === "string" ? sp.search : "";
   const category =
-    typeof searchParams?.category === "string" ? searchParams.category : "";
+    typeof sp.category === "string" ? sp.category : "";
   const pageParam =
-    typeof searchParams?.page === "string" ? parseInt(searchParams.page, 10) : 1;
+    typeof sp.page === "string" ? parseInt(sp.page, 10) : 1;
 
   const itemsPerPage = 8;
 
@@ -72,6 +79,7 @@ export default async function Products({ searchParams }: ProductsPageProps) {
     1,
     Math.ceil(totalItems / itemsPerPage || 1)
   );
+
   const currentPage =
     isNaN(pageParam) || pageParam < 1
       ? 1

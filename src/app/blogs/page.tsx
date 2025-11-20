@@ -6,8 +6,6 @@ import NavbarSSR from "@/ui/navbar";
 import { createClient, Asset, Entry } from "contentful";
 import { TypeBlogKebunTanikuSkeleton } from "@/contentful/types/blogKebunTaniku.type";
 
-// ❌ HAPUS type BlogsPageProps, biarkan Next yang handle PageProps
-
 export default async function BlogsPage({ searchParams }: any) {
   const client = createClient({
     space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
