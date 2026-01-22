@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "contentful";
+import useSWR from "swr";
+import { fetchProducts } from "@/lib/fetchProducts";
+import { fetchBlogs } from "@/lib/fetchBlogs";
 
 import AboutHome from "@/components/landing/about.landing";
 import BlogSectionHome from "@/components/landing/blogs.landing";
@@ -13,9 +14,6 @@ import Footer from "@/ui/footer";
 import NavbarHome from "@/ui/navbarHome";
 import ScrollToTopButton from "@/ui/scrollup";
 
-type Product = any;
-type Blog = any;
-
 type RecentArticle = {
   title: string;
   date: string;
@@ -23,110 +21,93 @@ type RecentArticle = {
 };
 
 export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [recentArticles, setRecentArticles] = useState<RecentArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // 🔥 PRODUCTS AUTO UPDATE
+  const {
+    data: products,
+    isLoading: loadingProducts,
+    error: productsError,
+  } = useSWR("products-home", fetchProducts, {
+    refreshInterval: 5000,
+    revalidateOnFocus: true,
+  });
 
-  useEffect(() => {
-    const client = createClient({
-      space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
-      accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN || "",
-    });
+  // 🔥 BLOGS AUTO UPDATE
+  const {
+    data: blogs,
+    isLoading: loadingBlogs,
+    error: blogsError,
+  } = useSWR("blogs-home", fetchBlogs, {
+    refreshInterval: 5000,
+    revalidateOnFocus: true,
+  });
 
-    const fetchData = async () => {
-      try {
-        const [productRes, blogRes] = await Promise.all([
-          client.getEntries({ content_type: "productsKebunTaniku" }),
-          client.getEntries({
-            content_type: "blogKebunTaniku",
-            order: ["-fields.date"],
-          }),
-        ]);
-
-        const productItems = productRes.items as any[];
-        const blogItems = blogRes.items as any[];
-
-        setProducts(productItems);
-        setBlogs(blogItems.slice(0, 4));
-        setRecentArticles(
-          blogItems.slice(0, 2).map((item: any) => ({
-            title: item.fields.title || "",
-            slug: item.fields.slug || "",
-            date: new Date(item.fields.date).toISOString(),
-          }))
-        );
-      } catch (err) {
-        console.error("CSR fetch error:", err);
-        setError("Gagal memuat data, silakan coba refresh halaman.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  // Footer recent articles ikut auto update
+  const recentArticles: RecentArticle[] =
+    blogs?.slice(0, 2).map((item: any) => ({
+      title: item.fields.title || "",
+      slug: item.fields.slug || "",
+      date: new Date(item.fields.date).toISOString(),
+    })) || [];
 
   return (
     <div className="flex flex-col min-h-screen">
       <NavbarHome />
 
-      <div
-        id="home"
-        className="flex flex-grow justify-center items-center mb-48 px-4 sm:px-6 lg:px-0"
-      >
+      {/* HERO */}
+      <div id="home" className="mb-48">
         <Hero />
       </div>
 
-      <div
-        id="aboutHome"
-        className="w-[75%] h-[500px] flex mx-auto max-w-full sm:w-[90%] sm:h-auto sm:flex-col"
-      >
+      {/* ABOUT */}
+      <div id="aboutHome" className="w-[75%] mx-auto sm:w-[90%]">
         <AboutHome />
       </div>
 
+      {/* PRODUCTS */}
       <div
         id="productsHome"
-        className="w-[75%] min-h-screen flex flex-col mx-auto mb-[-200px] sm:mb-40 mt-112 sm:mt-0"
+        className="w-[75%] mx-auto min-h-screen sm:w-[90%]"
       >
-        {loading ? (
-          <p className="text-center text-gray-500">Loading products...</p>
-        ) : (
-          <ProductsHome products={products} />
+        {loadingProducts && (
+          <p className="text-center text-gray-500">
+            Loading products...
+          </p>
         )}
-        {error && (
-          <p className="mt-4 text-center text-red-500 text-sm">{error}</p>
+
+        {productsError && (
+          <p className="text-center text-red-500">
+            Gagal memuat produk
+          </p>
         )}
+
+        {products && <ProductsHome products={products} />}
       </div>
 
-      <div
-        id="servicesHome"
-        className="flex flex-grow justify-center items-center mb-24 px-4 sm:px-6 lg:px-0"
-      >
+      {/* SERVICES */}
+      <div id="servicesHome" className="mb-24">
         <ServicesHome />
       </div>
 
-      <div
-        id="blogsHome"
-        className="flex justify-center items-center mb-16 mt-16 px-4 sm:px-6 lg:px-0"
-      >
-        <div className="w-[75%] max-w-full sm:w-[90%]">
-          {loading ? (
-            <p className="text-center text-gray-500">Loading blogs...</p>
-          ) : (
-            <BlogSectionHome blogs={blogs} />
-          )}
-        </div>
+      {/* BLOGS */}
+      <div id="blogsHome" className="mb-16">
+        {loadingBlogs && (
+          <p className="text-center text-gray-500">
+            Loading blogs...
+          </p>
+        )}
+
+        {blogsError && (
+          <p className="text-center text-red-500">
+            Gagal memuat blog
+          </p>
+        )}
+
+        {blogs && <BlogSectionHome blogs={blogs.slice(0, 4)} />}
       </div>
 
-      <div
-        id="contactHome"
-        className="flex justify-center items-center h-auto px-4 sm:px-6 lg:px-0 mb-16 sm:mb-24"
-      >
-        <div className="w-[75%] max-w-full sm:w-[90%]">
-          <ContactSectionHome />
-        </div>
+      {/* CONTACT */}
+      <div id="contactHome" className="mb-24">
+        <ContactSectionHome />
       </div>
 
       <Footer articles={recentArticles} />
