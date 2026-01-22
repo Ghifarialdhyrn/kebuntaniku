@@ -1,26 +1,20 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals.js";
+import next from "eslint-config-next";
 
 export default defineConfig([
-  // Next.js Core Web Vitals rules
-  ...nextVitals,
+  // ✅ Next.js default rules (AMAN DI SEMUA VERSI)
+  next,
 
-  // 🔥 OVERRIDE RULES DI SINI
+  // 🔧 Override rules
   {
     rules: {
-      // Matikan warning <img>
       "@next/next/no-img-element": "off",
-
-      // Matikan error <a href="/">
       "@next/next/no-html-link-for-pages": "off",
-
-      // Sudah benar
       "react/no-unescaped-entities": "off",
       "@next/next/no-page-custom-font": "off",
     },
   },
 
-  // Ignore build folders
   globalIgnores([
     ".next/**",
     "out/**",
